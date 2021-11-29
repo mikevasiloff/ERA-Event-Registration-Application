@@ -160,15 +160,17 @@ export class Registration {
                                     text: "Register",
                                     type: Components.ButtonTypes.Primary,
                                     onClick: () => {
+                                        // "has-uploaded-documents" flag
                                         let hasUploaded: boolean = false;
                                         
+                                        // Check if the current user has uploaded any documents
                                         for(let i = 0; i < this._readyUser.length; i++) {
                                             if (this._readyUser[i] === ContextInfo.userLoginName) {
                                                 hasUploaded = true;
                                             }
                                         }
 
-
+                                        // See if the user has uploaded required docs
                                         if (hasUploaded) {
                                             Modal.hide();
 
@@ -269,17 +271,12 @@ export class Registration {
                                                     // TODO
                                                 }
                                             );
-                                            console.log("Now registered/unregistered");
                                         }
+                                        // Else, the user has not uploaded required docs
                                         else {
-                                            alert("Please upload required docs before registering!");
+                                            // Notify the user to upload before registering
+                                            alert("UPLOAD REQUIRED DOCS FIRST!");
                                         }
-                                        // this._readyUser.forEach( () => {
-                                        //     if (this._readyUser[] == ContextInfo.userLoginName)
-                                        // });
-
-
-                                        
                                     }
                                 },
                                 {
