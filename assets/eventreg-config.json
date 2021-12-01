@@ -3,6 +3,6 @@
     "headerImage": "",
     "headerTitle": "",
     "hideAddToCalenderColumn": false,
-    "hideHeader": false,
+    "hideHeader": true,
     "membersGroupName": ""
 }

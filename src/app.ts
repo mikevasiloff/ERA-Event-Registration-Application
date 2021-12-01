@@ -70,20 +70,18 @@ export class App {
     this._dashboard = new Dashboard({
       el: this._el,
       useModal: true,
-      hideFilter: !this._isAdmin ? true : false,
+      // hideFilter: !this._isAdmin ? true : false,
       hideHeader: DataSource.Configuration.hideHeader,
-      header: {
-        title: DataSource.Configuration.headerTitle || Strings.ProjectName,
-        onRendered: (el) => {
-          console.log("These are Doc Libraries " + DataSource.Events[0]);
-
-          // See if the image url is defined
-          if (DataSource.Configuration.headerImage) {
-            // Update the header
-            el.style.backgroundImage = "url(" + DataSource.Configuration.headerImage + ")";
-          }
-        }
-      },
+      // header: {
+      //   title: DataSource.Configuration.headerTitle || Strings.ProjectName,
+      //   onRendered: (el) => {
+      //     // See if the image url is defined
+      //     if (DataSource.Configuration.headerImage) {
+      //       // Update the header
+      //       el.style.backgroundImage = "url(" + DataSource.Configuration.headerImage + ")";
+      //     }
+      //   }
+      // },
       filters: {
         items: [
           {
@@ -91,16 +89,20 @@ export class App {
             items: DataSource.StatusFilters,
             onFilter: (value: string) => {
               // Update the default flag
-              DataSource.StatusFilters[0].isSelected = value ? true : false;
+              //DataSource.StatusFilters[0].isSelected = value ? true : false;
+
+              // for(let i = 0; i < DataSource.Events.length; i++) {
+              //   console.log("These are Events " + DataSource.Events[i].Editor.Title);
+              // }
 
               // Filter the dashboard
-              this._dashboard.filter(0, value ? "" : "Active");
+              //this._dashboard.filter(0, value ? "" : "Active");
 
-              // let filterSet: boolean = value === "" ? false : true;
-              // DataSource.SetFilter(filterSet);            
-              // this._dashboard.refresh(
-              //   value === "" ? DataSource.ActiveEvents : DataSource.Events
-              // );
+              let filterSet: boolean = value === "" ? false : true;
+              DataSource.SetFilter(filterSet);            
+              this._dashboard.refresh(
+                value === "" ? DataSource.ActiveEvents : DataSource.Events
+              );
             },
           },
         ],
@@ -116,7 +118,7 @@ export class App {
         ],
       },
       table: {
-        rows: DataSource.Events,
+        rows: DataSource.ActiveEvents,
         dtProps: {
           dom: 'rt<"row"<"col-sm-4"l><"col-sm-4"i><"col-sm-4"p>>',
           columnDefs: [
@@ -172,7 +174,7 @@ export class App {
             name: "",
             title: "",
             onRenderCell: (el, column, item: IEventItem) => {
-              // Set the filter/search value
+              //Set the filter/search value
               let today = moment();
               let startDate = item.StartDate;
               let isActive = moment(startDate).isAfter(today);
@@ -427,10 +429,10 @@ export class App {
       }
     });
 
-    // See if we are filtering active items
-    if (this._dashboard.getFilter("Event Status").getValue() == null) {
-      // Filter the dashboard
-      this._dashboard.filter(0, "Active");
-    }
+    // // See if we are filtering active items
+    // if (this._dashboard.getFilter("Event Status").getValue() == null) {
+    //   // Filter the dashboard
+      //  this._dashboard.filter(0, "Active");
+    // }
   }
 }

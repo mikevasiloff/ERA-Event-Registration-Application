@@ -13,6 +13,7 @@ export interface IEventItem extends Types.SP.ListItemOData {
     OpenSpots: string;
     Capacity: string;
     CreatedBy: string;
+    Editor: { Id: number, Title: string };
     POC: {
         results: {
             EMail: string;
@@ -62,17 +63,17 @@ export class DataSource {
     // Events
     private static _events: IEventItem[] = null;
     static get Events(): IEventItem[] { return this._events; }
-    // static get ActiveEvents(): IEventItem[] {
-    //     let activeEvents: IEventItem[] = [];
-    //     let today = moment();
-    //     this._events.forEach((event) => {
-    //         let startDate = event.StartDate;
-    //         if(moment(startDate).isAfter(today)) {
-    //             activeEvents.push(event);
-    //         }
-    //     })
-    //     return activeEvents;
-    // }
+    static get ActiveEvents(): IEventItem[] {
+        let activeEvents: IEventItem[] = [];
+        let today = moment();
+        this._events.forEach((event) => {
+            let startDate = event.StartDate;
+            if(moment(startDate).isAfter(today)) {
+                activeEvents.push(event);
+            }
+        })
+        return activeEvents;
+    }
 
     static loadEvents(): PromiseLike<void> {
         // Return a promise
@@ -82,14 +83,15 @@ export class DataSource {
             // Load the data
             if (this._isAdmin) {
                 web.Lists(Strings.Lists.Events).Items().query({
-                    Expand: ["AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
+                    Expand: ["Editor", "AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
                     GetAllItems: true,
                     OrderBy: ["StartDate asc"],
                     Top: 5000,
                     Select: [
                         "*", "POC/Id", "POC/Title", "POC/EMail",
                         "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
-                        "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail"
+                        "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
+                        "Editor/Id", "Editor/Title",
                     ]
                 }).execute(
                     // Success
