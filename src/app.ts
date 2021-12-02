@@ -71,35 +71,15 @@ export class App {
       el: this._el,
       useModal: true,
       // hideFilter: !this._isAdmin ? true : false,
-      hideHeader: DataSource.Configuration.hideHeader,
-      // header: {
-      //   title: DataSource.Configuration.headerTitle || Strings.ProjectName,
-      //   onRendered: (el) => {
-      //     // See if the image url is defined
-      //     if (DataSource.Configuration.headerImage) {
-      //       // Update the header
-      //       el.style.backgroundImage = "url(" + DataSource.Configuration.headerImage + ")";
-      //     }
-      //   }
-      // },
+      // hideHeader: DataSource.Configuration.hideHeader,
       filters: {
         items: [
           {
             header: "Event Status",
             items: DataSource.StatusFilters,
             onFilter: (value: string) => {
-              // Update the default flag
-              //DataSource.StatusFilters[0].isSelected = value ? true : false;
-
-              // for(let i = 0; i < DataSource.Events.length; i++) {
-              //   console.log("These are Events " + DataSource.Events[i].Editor.Title);
-              // }
-
-              // Filter the dashboard
-              //this._dashboard.filter(0, value ? "" : "Active");
-
               let filterSet: boolean = value === "" ? false : true;
-              DataSource.SetFilter(filterSet);            
+              DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
                 value === "" ? DataSource.ActiveEvents : DataSource.Events
               );
@@ -175,48 +155,48 @@ export class App {
             title: "",
             onRenderCell: (el, column, item: IEventItem) => {
               //Set the filter/search value
-              let today = moment();
-              let startDate = item.StartDate;
-              let isActive = moment(startDate).isAfter(today);
-              el.setAttribute("data-search", isActive ? "Active" : "Past");
+              // let today = moment();
+              // let startDate = item.StartDate;
+              // let isActive = moment(startDate).isAfter(today);
+              // el.setAttribute("data-search", isActive ? "Active" : "Past");
 
               // Render the tooltip
-              Components.Tooltip({
+              Components.Button({
                 el: el,
-                content: "View Event",
-                placement: Components.TooltipPlacements.Top,
-                btnProps: {
-                  isDisabled: !this._canViewEvent,
-                  iconType: calendarEvent,
-                  iconSize: 24,
-                  toggle: "tooltip",
-                  type: Components.ButtonTypes.OutlinePrimary,
-                  onClick: (button) => {
-                    ItemForm.view({
-                      itemId: item.Id,
-                      useModal: true,
-                      onCreateViewForm: (props) => {
-                        props.excludeFields = [
-                          "RegisteredUsers",
-                          "WaitListedUsers",
-                        ];
-                        return props;
-                      },
-                      onSetFooter: (elFooter) => {
-                        // Render the close button
-                        Components.Button({
-                          el: elFooter,
-                          text: "Close",
-                          type: Components.ButtonTypes.Secondary,
-                          onClick: (button) => {
-                            ItemForm.close();
-                          }
-                        });
-                      }
-                    });
-                    document.querySelector(".modal-dialog").classList.add("modal-dialog-scrollable");
-                  },
-                }
+                text: " View Event",
+
+
+                isDisabled: !this._canViewEvent,
+                iconType: calendarEvent,
+                iconSize: 24,
+                toggle: "tooltip",
+                type: Components.ButtonTypes.OutlinePrimary,
+                onClick: (button) => {
+                  ItemForm.view({
+                    itemId: item.Id,
+                    useModal: true,
+                    onCreateViewForm: (props) => {
+                      props.excludeFields = [
+                        "RegisteredUsers",
+                        "WaitListedUsers",
+                      ];
+                      return props;
+                    },
+                    onSetFooter: (elFooter) => {
+                      // Render the close button
+                      Components.Button({
+                        el: elFooter,
+                        text: "Close",
+                        type: Components.ButtonTypes.Secondary,
+                        onClick: (button) => {
+                          ItemForm.close();
+                        }
+                      });
+                    }
+                  });
+                  document.querySelector(".modal-dialog").classList.add("modal-dialog-scrollable");
+                },
+
               });
             },
           },
@@ -428,11 +408,5 @@ export class App {
         ]
       }
     });
-
-    // // See if we are filtering active items
-    // if (this._dashboard.getFilter("Event Status").getValue() == null) {
-    //   // Filter the dashboard
-      //  this._dashboard.filter(0, "Active");
-    // }
   }
 }

@@ -98,24 +98,24 @@ export class Registration {
         }
         // Else, see if the user is registered
         else if (isRegistered) {
-            btnText = "Unregister";
+            btnText = " Unregister";
             btnType = Components.ButtonTypes.OutlineDanger;
             dlg = "Unregistering the User";
             iconType = calendarMinusFill;
         }
         // Else, the event is open
         else {
-            btnText = "Register";
+            btnText = " Register";
             btnType = Components.ButtonTypes.OutlinePrimary;
             dlg = "Registering the User";
             iconType = calendarPlusFill;
         }
 
         // Render the tooltip
-        Components.Tooltip({
+        Components.Button({
             el: this._el,
-            content: btnText,
-            btnProps: {
+            
+                text: btnText,
                 iconType: iconType,
                 iconSize: iconSize,
                 type: btnType,
@@ -397,7 +397,7 @@ export class Registration {
                         );
                     }
                 }
-            }
+            
         });
     }
 

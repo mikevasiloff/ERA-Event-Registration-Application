@@ -31,7 +31,7 @@ export class DocumentsView {
     // Display the delete modal
     private deleteDocument(attachment: Types.SP.Attachment) {
         // Hide the slider
-        CanvasForm.hide();
+        //CanvasForm.hide();
 
         // Set the header
         Modal.setHeader("Delete " + attachment.FileName);
@@ -43,7 +43,7 @@ export class DocumentsView {
         Modal.setAutoClose(false);
         Modal.setCloseEvent(() => {
             // Show the slider
-            CanvasForm.show();
+            Modal.show();
         });
 
         // Set the footer
@@ -100,7 +100,7 @@ export class DocumentsView {
                         Modal.hide();
 
                         // Show the slider
-                        CanvasForm.show();
+                        Modal.show();
                     }
                 }
             ]
@@ -114,44 +114,24 @@ export class DocumentsView {
     private render() {
         // See if attachments exist
         if (this._item.AttachmentFiles.results.length > 0) {
-            // Render the view attachments tooltip
-            Components.Tooltip({
-                el: this._el,
-                content: "View Attachments",
-                placement: Components.TooltipPlacements.Top,
-                btnProps: {
-                    className: "me-2",
-                    iconType: files,
-                    iconSize: 24,
-                    type: Components.ButtonTypes.OutlinePrimary,
-                    onClick: () => {
-                        // Clear the canvas form and modal
-                        CanvasForm.clear();
-                        Modal.clear();
-
-                        // View the attachments
-                        this.viewAttachments();
-                    }
-                }
-            });
+            // View the attachments
+            this.viewAttachments();
         }
 
         //Render the upload tooltip
-        Components.Tooltip({
+        Components.Button({
             el: this._el,
-            content: "Upload a document",
-            placement: Components.TooltipPlacements.Top,
-            btnProps: {
-                isDisabled: !this._canEditEvent,
-                iconType: upload,
-                iconSize: 24,
-                toggle: "tooltip",
-                type: Components.ButtonTypes.OutlinePrimary,
-                onClick: () => {
-                    // Show the upload document dialog
-                    this.uploadDocument();
-                },
-            }
+            text: "Upload a document",
+            isDisabled: !this._canEditEvent,
+            iconType: upload,
+            iconSize: 24,
+            toggle: "tooltip",
+            type: Components.ButtonTypes.OutlinePrimary,
+            onClick: () => {
+                // Show the upload document dialog
+                this.uploadDocument();
+            },
+
         });
     }
 
@@ -195,10 +175,10 @@ export class DocumentsView {
     // Displays the attachments in a slider
     private viewAttachments() {
         // Set the header
-        CanvasForm.setHeader("View Attachments");
+        Modal.setHeader("View Attachments");
 
         // Set the body
-        CanvasForm.setBody(Components.Table({
+        Modal.setBody(Components.Table({
             rows: this._item.AttachmentFiles.results,
             columns: [
                 {
@@ -209,45 +189,41 @@ export class DocumentsView {
                     name: "",
                     onRenderCell: (el, col, attachment: Types.SP.Attachment) => {
                         // Render the view tooltip
-                        Components.Tooltip({
+                        Components.Button({
                             el,
-                            content: "View the document",
-                            btnProps: {
-                                iconType: fileEarmarkText,
-                                iconSize: 24,
-                                type: Components.ButtonTypes.OutlinePrimary,
-                                onClick: () => {
-                                    let isWopi: boolean = Documents.isWopi(attachment.FileName);
-                                    window.open(
-                                        isWopi
-                                            ? ContextInfo.webServerRelativeUrl +
-                                            "/_layouts/15/WopiFrame.aspx?sourcedoc=" +
-                                            attachment.ServerRelativeUrl +
-                                            "&action=view"
-                                            : attachment.ServerRelativeUrl,
-                                        "_blank"
-                                    );
-                                }
+                            text: "View the document",
+                            iconType: fileEarmarkText,
+                            iconSize: 24,
+                            type: Components.ButtonTypes.OutlinePrimary,
+                            onClick: () => {
+                                let isWopi: boolean = Documents.isWopi(attachment.FileName);
+                                window.open(
+                                    isWopi
+                                        ? ContextInfo.webServerRelativeUrl +
+                                        "/_layouts/15/WopiFrame.aspx?sourcedoc=" +
+                                        attachment.ServerRelativeUrl +
+                                        "&action=view"
+                                        : attachment.ServerRelativeUrl,
+                                    "_blank"
+                                );
                             }
                         });
 
                         // See if this is an admin
                         if (this._isAdmin) {
                             // Render the delete tooltip
-                            Components.Tooltip({
+                            Components.Button({
                                 el,
-                                content: "Delete the document",
-                                btnProps: {
-                                    className: "ms-2",
-                                    isDisabled: !this._canEditEvent,
-                                    iconType: fileEarmarkX,
-                                    iconSize: 24,
-                                    toggle: "tooltip",
-                                    type: Components.ButtonTypes.OutlineDanger,
-                                    onClick: () => {
-                                        // Delete the document
-                                        this.deleteDocument(attachment);
-                                    }
+                                text: "Delete the document",
+                                className: "ms-2",
+                                isDisabled: !this._canEditEvent,
+                                iconType: fileEarmarkX,
+                                iconSize: 24,
+                                toggle: "tooltip",
+                                type: Components.ButtonTypes.OutlineDanger,
+                                onClick: () => {
+                                    // Delete the document
+                                    this.deleteDocument(attachment);
                                 }
                             });
                         }
@@ -257,6 +233,6 @@ export class DocumentsView {
         }).el);
 
         // Show the slider
-        CanvasForm.show();
+        Modal.show();
     }
 }
