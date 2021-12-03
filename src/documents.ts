@@ -31,7 +31,7 @@ export class DocumentsView {
     // Display the delete modal
     private deleteDocument(attachment: Types.SP.Attachment) {
         // Hide the slider
-        //CanvasForm.hide();
+        // Modal.hide();
 
         // Set the header
         Modal.setHeader("Delete " + attachment.FileName);
@@ -54,8 +54,9 @@ export class DocumentsView {
                     type: Components.ButtonTypes.Primary,
                     onClick: () => {
                         // Close the dialog
-                        Modal.hide();
+                        //Modal.hide();
 
+                        this.viewAttachments();
                         // Show a loading dialog
                         LoadingDialog.setHeader("Deleting Document");
                         LoadingDialog.setBody("This will close after the document has been deleted.");
@@ -96,43 +97,55 @@ export class DocumentsView {
                     text: "No",
                     type: Components.ButtonTypes.Secondary,
                     onClick: () => {
-                        // Close the dialog
-                        Modal.hide();
-
-                        // Show the slider
-                        Modal.show();
+                        // View the attachments
+                        this.viewAttachments();
                     }
                 }
             ]
         }).el);
-
-        // Show the modal
-        Modal.show();
     }
 
     // Renders the attachment icons
     private render() {
-        // See if attachments exist
-        if (this._item.AttachmentFiles.results.length > 0) {
-            // View the attachments
-            this.viewAttachments();
-        }
-
-        //Render the upload tooltip
-        Components.Button({
+        // Add the documents dropdown
+        let docDropdown = Components.Dropdown({
             el: this._el,
-            text: "Upload a document",
-            isDisabled: !this._canEditEvent,
-            iconType: upload,
-            iconSize: 24,
-            toggle: "tooltip",
-            type: Components.ButtonTypes.OutlinePrimary,
-            onClick: () => {
-                // Show the upload document dialog
-                this.uploadDocument();
-            },
-
+            className: "eventRegDoc",
+            items: [
+                {
+                    text: "View Attachments",
+                    iconType: files,
+                    iconSize: 24,
+                    onClick: () => {
+                        // See if attachments exist
+                        if (this._item.AttachmentFiles.results.length > 0) {
+                            // View the attachments
+                            this.viewAttachments();
+                        }
+                    }
+                },
+                {
+                    text: "Upload a document",
+                    isDisabled: !this._canEditEvent,
+                    iconType: upload,
+                    iconSize: 24,
+                    onClick: () => {
+                        // Show the upload document dialog
+                        this.uploadDocument();
+                    },
+                }
+            ]
         });
+
+        let elButton = docDropdown.el.querySelector("button");
+        if (elButton) {
+            // Update the class
+            elButton.classList.add("btn-icon");
+            elButton.classList.add("w-100");
+
+            // Append the icon
+            elButton.appendChild(files(16));
+        }
     }
 
     // Uploads a new attachment file
@@ -230,6 +243,16 @@ export class DocumentsView {
                     }
                 }
             ]
+        }).el);
+
+        // Set the footer
+        Modal.setFooter(Components.Button({
+            text: "Close",
+            type: Components.ButtonTypes.Secondary,
+            onClick: () => {
+                // Close the dialog
+                Modal.hide();
+            }
         }).el);
 
         // Show the slider
