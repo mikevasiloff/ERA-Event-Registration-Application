@@ -1,7 +1,10 @@
 import { InstallationRequired, LoadingDialog, Modal } from "dattatable";
 import { Components, Helper, Utility } from "gd-sprest-bs";
 import { calendarPlus } from "gd-sprest-bs/build/icons/svgs/calendarPlus";
+import { peopleFill } from "gd-sprest-bs/build/icons/svgs/peopleFill";
+import { personBoundingBox } from "gd-sprest-bs/build/icons/svgs/personBoundingBox";
 import { gearWideConnected } from "gd-sprest-bs/build/icons/svgs/gearWideConnected";
+import { collectionFill } from "gd-sprest-bs/build/icons/svgs/collectionFill";
 import * as moment from "moment";
 import { Configuration } from "./cfg";
 import { DataSource, IEventItem } from "./ds";
@@ -33,7 +36,7 @@ export class Admin {
       navItems.push({
         className: "btn-primary",
         isDisabled: !canEditEvent,
-        text: "MANAGE GROUPS",
+        text: " MANAGE GROUPS",
         isButton: true,
         items: [
           {
@@ -51,12 +54,14 @@ export class Admin {
             },
           },
         ],
+        iconType: peopleFill,
+        iconSize: 18,
       });
 
       // Add an option to manage the application
       navItems.push({
         className: "btn-primary",
-        text: "MANAGE APP",
+        text: " MANAGE APP",
         isButton: true,
         onClick: () => {
           // Display a loading dialog
@@ -72,18 +77,22 @@ export class Admin {
             // Show the installation dialog
             InstallationRequired.showDialog();
           });
-        }
+        },
+        iconType: personBoundingBox,
+        iconSize: 18,
       });
       
       // Add an button to manage the Required Docs library
       navItems.push({
         className: "btn-primary",
-        text: "REQUIRED DOCUMENTS",
+        text: " REQUIRED DOCUMENTS",
         isButton: true,
         onClick: () => {
           // Show the manager's group
           window.open(DataSource.DocLibUrl, "_blank");
-        }
+        },
+        iconType: collectionFill,
+        iconSize: 18,
       });
     }
 

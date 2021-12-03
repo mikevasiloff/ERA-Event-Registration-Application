@@ -173,6 +173,7 @@ export class App {
                       props.excludeFields = [
                         "RegisteredUsers",
                         "WaitListedUsers",
+                        "IsCancelled",
                       ];
                       return props;
                     },

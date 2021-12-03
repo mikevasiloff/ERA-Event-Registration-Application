@@ -114,8 +114,6 @@ export class DocumentsView {
             items: [
                 {
                     text: "View Attachments",
-                    iconType: files,
-                    iconSize: 24,
                     onClick: () => {
                         // See if attachments exist
                         if (this._item.AttachmentFiles.results.length > 0) {
@@ -127,8 +125,6 @@ export class DocumentsView {
                 {
                     text: "Upload a document",
                     isDisabled: !this._canEditEvent,
-                    iconType: upload,
-                    iconSize: 24,
                     onClick: () => {
                         // Show the upload document dialog
                         this.uploadDocument();
