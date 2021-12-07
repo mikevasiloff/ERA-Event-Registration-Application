@@ -157,13 +157,10 @@ export class App {
               // Render the tooltip
               Components.Button({
                 el: el,
-                text: " View Event",
-
-
+                text: " View",
                 isDisabled: !this._canViewEvent,
                 iconType: calendarEvent,
                 iconSize: 24,
-                toggle: "tooltip",
                 type: Components.ButtonTypes.OutlinePrimary,
                 onClick: (button) => {
                   ItemForm.view({
