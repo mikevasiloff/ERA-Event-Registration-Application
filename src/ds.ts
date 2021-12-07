@@ -207,7 +207,7 @@ export class DataSource {
 
     // Status Filters
     private static _statusFilters: Components.ICheckboxGroupItem[] = [{
-        label: "Show all inactive and active registerable events",
+        label: "Show all active and inactive events",
         type: Components.CheckboxGroupTypes.Switch,
         isSelected: false
     }];

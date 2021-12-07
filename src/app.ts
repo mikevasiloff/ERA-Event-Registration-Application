@@ -154,6 +154,12 @@ export class App {
             name: "",
             title: "",
             onRenderCell: (el, column, item: IEventItem) => {
+              // Set the filter/search value
+              let today = moment();
+              let startDate = item.StartDate;
+              let isActive = moment(startDate).isAfter(today);
+              el.setAttribute("data-search", isActive ? "Active" : "Past");
+              
               // Render the tooltip
               Components.Button({
                 el: el,
