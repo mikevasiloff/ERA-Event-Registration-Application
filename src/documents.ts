@@ -136,10 +136,12 @@ export class DocumentsView {
                 },
                 {
                     text: "Upload a document",
-                    isDisabled: !this._canEditEvent,
+                    isDisabled: !this._isAdmin,
                     onClick: () => {
-                        // Show the upload document dialog
-                        this.uploadDocument();
+                        if (this._isAdmin) {
+                            // Show the upload document dialog
+                            this.uploadDocument();
+                        }
                     },
                 }
             ]
@@ -212,45 +214,45 @@ export class DocumentsView {
                     name: "",
                     onRenderCell: (el, col, attachment: Types.SP.Attachment) => {
 
-                            // Render the view tooltip
+                        // Render the view tooltip
+                        Components.Button({
+                            el,
+                            text: "View the document",
+                            iconType: fileEarmarkText,
+                            iconSize: 24,
+                            type: Components.ButtonTypes.OutlinePrimary,
+                            onClick: () => {
+                                let isWopi: boolean = Documents.isWopi(attachment.FileName);
+                                window.open(
+                                    isWopi
+                                        ? ContextInfo.webServerRelativeUrl +
+                                        "/_layouts/15/WopiFrame.aspx?sourcedoc=" +
+                                        attachment.ServerRelativeUrl +
+                                        "&action=view"
+                                        : attachment.ServerRelativeUrl,
+                                    "_blank"
+                                );
+                            }
+                        });
+
+                        // See if this is an admin
+                        if (this._isAdmin) {
+                            // Render the delete tooltip
                             Components.Button({
                                 el,
-                                text: "View the document",
-                                iconType: fileEarmarkText,
+                                text: "Delete the document",
+                                className: "ms-2",
+                                isDisabled: !this._canEditEvent,
+                                iconType: fileEarmarkX,
                                 iconSize: 24,
-                                type: Components.ButtonTypes.OutlinePrimary,
+                                toggle: "tooltip",
+                                type: Components.ButtonTypes.OutlineDanger,
                                 onClick: () => {
-                                    let isWopi: boolean = Documents.isWopi(attachment.FileName);
-                                    window.open(
-                                        isWopi
-                                            ? ContextInfo.webServerRelativeUrl +
-                                            "/_layouts/15/WopiFrame.aspx?sourcedoc=" +
-                                            attachment.ServerRelativeUrl +
-                                            "&action=view"
-                                            : attachment.ServerRelativeUrl,
-                                        "_blank"
-                                    );
+                                    // Delete the document
+                                    this.deleteDocument(attachment);
                                 }
                             });
-
-                            // See if this is an admin
-                            if (this._isAdmin) {
-                                // Render the delete tooltip
-                                Components.Button({
-                                    el,
-                                    text: "Delete the document",
-                                    className: "ms-2",
-                                    isDisabled: !this._canEditEvent,
-                                    iconType: fileEarmarkX,
-                                    iconSize: 24,
-                                    toggle: "tooltip",
-                                    type: Components.ButtonTypes.OutlineDanger,
-                                    onClick: () => {
-                                        // Delete the document
-                                        this.deleteDocument(attachment);
-                                    }
-                                });
-                            }
+                        }
 
                     }
                 }

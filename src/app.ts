@@ -159,7 +159,7 @@ export class App {
               let startDate = item.StartDate;
               let isActive = moment(startDate).isAfter(today);
               el.setAttribute("data-search", isActive ? "Active" : "Past");
-              
+
               // Render the tooltip
               Components.Button({
                 el: el,
@@ -260,7 +260,7 @@ export class App {
               el.innerHTML =
                 moment(date).format("MMMM DD, YYYY") +
                 "<br>" +
-                moment(date).format("dddd HH:mm");
+                moment(date).format("dddd HH:mm A");
               // Set the date/time filter/sort values
               el.setAttribute("data-filter", moment(item[column.name]).format("dddd MMMM DD YYYY"));
               el.setAttribute("data-sort", item[column.name]);
@@ -275,7 +275,7 @@ export class App {
               el.innerHTML =
                 moment(date).format("MMMM DD, YYYY") +
                 "<br/>" +
-                moment(date).format("dddd HH:mm");
+                moment(date).format("dddd HH:mm A");
               // Set the date/time filter/sort values
               el.setAttribute("data-filter", moment(item[column.name]).format("dddd MMMM DD YYYY"));
               el.setAttribute("data-sort", item[column.name]);

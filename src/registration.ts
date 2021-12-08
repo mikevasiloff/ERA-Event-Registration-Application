@@ -124,7 +124,7 @@ export class Registration {
                     if (!isRegistered) {
                         console.log("this is what's in isRegistered: " + isRegistered);
                         // TO-DO upload a document to the 'Required Docs' library
-                        Modal.setHeader("Upload Required Documents: " + ContextInfo.userDisplayName);
+                        Modal.setHeader(ContextInfo.userDisplayName);
 
                         let elContainer = document.createElement("div");
                         // Upload Button
@@ -132,7 +132,7 @@ export class Registration {
                             el: elContainer,
                             text: "Upload a Document",
                             type: Components.ButtonTypes.OutlineDark,
-                            isLarge: true,
+                            // isLarge: true,
                             onClick: (ev, item) => {
                                 // Show the file upload dialog
                                 Helper.ListForm.showFileDialog().then(fileInfo => {
@@ -415,12 +415,14 @@ export class Registration {
                 let body = `${ContextInfo.userDisplayName}, you have ${userIsRegistering ? "successfully registered for" : (userIsWaitlisted ? "successfully been added from the waitlist for" : "been removed from")} the following event:
                     <p><strong>Title:</strong>${event.Title}</p></br>
                     <p><strong>Description:</strong>${event.Description}</p></br>
-                    <p><strong>Start Date:</strong>${moment(event.StartDate).format("MM-DD-YYYY HH:mm")}</p></br>
-                    <p><strong>End Date:</strong>${moment(event.EndDate).format("MM-DD-YYYY HH:mm")}</p></br>
-                    <p><strong>Location:</strong>${event.Location}`;
+                    <p><strong>Start Date:</strong>${moment(event.StartDate).format("MMMM DD, YYYY HH:MM A")}</p></br>
+                    <p><strong>End Date:</strong>${moment(event.EndDate).format("MMMM DD, YYYY HH:MM A")}</p></br>
+                    <p><strong>Location:</strong>${event.Location}</p></br>
+                    <p><strong>Point of Contact:</strong>${event.POCId}`;
+                    
 
                 // Set the subject
-                let subject = `Successfully ${userId > 0 ? "added from the waitlist" : "registered"} for the event: ${event.Title}`;
+                let subject = `${userId > 0 ? "Added from the waitlist" : "Registered"} for the event: ${event.Title}`;
 
                 // See if the user email exists and is registering for the event
                 if (userEmail) {
