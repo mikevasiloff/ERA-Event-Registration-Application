@@ -15,6 +15,7 @@ import Strings from "./strings";
 export class Registration {
     private _el: HTMLElement = null;
     private _item: IEventItem = null;
+    private _pocs: string[];
     private _readyUser: String[] = [];
     private _onRefresh: () => void = null;
 
@@ -63,6 +64,18 @@ export class Registration {
 
     // Renders the registration button
     private render() {
+
+        // Get POC's
+        // let pocs = ((this._item["POC"] ? this._item["POC"].results : null) || []).sort((a, b) => {
+        //     if (a.Title < b.Title) { return -1; }
+        //     if (a.Title > b.Title) { return 1; }
+        //     return 0;
+        // });
+        // for (let i = 0; i < pocs.length; i++) {
+        //     this._pocs[i] += pocs[i].Title;
+        //     console.log("POC's: " + this._pocs[i]);
+        // }
+
         // See if the user if registered
         let isRegistered = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results.indexOf(ContextInfo.userId) >= 0 : false;
 
@@ -406,6 +419,7 @@ export class Registration {
     static sendMail(event: IEventItem, userId: number, userIsRegistering: boolean, userIsWaitlisted: boolean): PromiseLike<void> {
         // Return a promise
         return new Promise((resolve) => {
+
             // Do nothing if the user is unregistering from the event
             if (!userIsRegistering) { resolve(); return; }
 
@@ -417,9 +431,8 @@ export class Registration {
                     <p><strong>Description:</strong>${event.Description}</p></br>
                     <p><strong>Start Date:</strong>${moment(event.StartDate).format("MMMM DD, YYYY HH:MM A")}</p></br>
                     <p><strong>End Date:</strong>${moment(event.EndDate).format("MMMM DD, YYYY HH:MM A")}</p></br>
-                    <p><strong>Location:</strong>${event.Location}</p></br>
-                    <p><strong>Point of Contact:</strong>${event.POCId}`;
-                    
+                    <p><strong>Location:</strong>${event.Location}</p></br>`;
+
 
                 // Set the subject
                 let subject = `${userId > 0 ? "Added from the waitlist" : "Registered"} for the event: ${event.Title}`;

@@ -142,10 +142,11 @@ export class App {
             jQuery(".dataTables_length", this._table).addClass("pt-2");
             jQuery(".dataTables_paginate", this._table).addClass("pt-03");
           },
+          lengthMenu: [50, 10, 25, 100],
           // Sort descending by Start Date
           order: [[3, "asc"]],
           language: {
-            emptyTable: "No events were found",
+            emptyTable: "No active events to display",
           },
         },
         columns: [

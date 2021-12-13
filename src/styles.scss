@@ -1,19 +1,21 @@
 .bs .btn-primary:hover {
-    background-color: #004c86;
-    border-color: #4EF2EE;
     color: #fff;
-    font-weight: bold;
-}
-
-.bs .btn-outline-primary:hover {
     background-color: #004c86;
     border-color: #4EF2EE;
+    font-weight: bold;
 }
 
 .bs .btn-secondary:hover {
     color: #fff;
     background-color: #5c636a;
     border-color: #565e64;
+    font-weight: bold;
+}
+
+.bs .btn-danger:hover {
+    color: #fff;
+    background-color: #bb2d3b;
+    border-color: #b02a37;
     font-weight: bold;
 }
 
