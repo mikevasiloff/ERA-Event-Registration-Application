@@ -1,13 +1,11 @@
-import { LoadingDialog, Modal } from "dattatable";
-import { Components, ContextInfo, Helper, List, Utility, Web } from "gd-sprest-bs";
+import { LoadingDialog } from "dattatable";
+import { Components, ContextInfo, Utility, Web } from "gd-sprest-bs";
 import { IEventItem } from "./ds";
 import * as moment from "moment";
 import { calendarPlusFill } from "gd-sprest-bs/build/icons/svgs/calendarPlusFill"
 import { calendarMinusFill } from "gd-sprest-bs/build/icons/svgs/calendarMinusFill"
 import { personPlusFill } from "gd-sprest-bs/build/icons/svgs/personPlusFill";
 import { personXFill } from "gd-sprest-bs/build/icons/svgs/personXFill";
-import Strings from "./strings";
-//import { Modal } from "gd-bs/src/components/components";
 
 /**
  * Registration Button
@@ -15,8 +13,6 @@ import Strings from "./strings";
 export class Registration {
     private _el: HTMLElement = null;
     private _item: IEventItem = null;
-    private _pocs: string[];
-    private _readyUser: String[] = [];
     private _onRefresh: () => void = null;
 
     // Constructor
@@ -64,18 +60,6 @@ export class Registration {
 
     // Renders the registration button
     private render() {
-
-        // Get POC's
-        // let pocs = ((this._item["POC"] ? this._item["POC"].results : null) || []).sort((a, b) => {
-        //     if (a.Title < b.Title) { return -1; }
-        //     if (a.Title > b.Title) { return 1; }
-        //     return 0;
-        // });
-        // for (let i = 0; i < pocs.length; i++) {
-        //     this._pocs[i] += pocs[i].Title;
-        //     console.log("POC's: " + this._pocs[i]);
-        // }
-
         // See if the user if registered
         let isRegistered = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results.indexOf(ContextInfo.userId) >= 0 : false;
 
@@ -131,285 +115,105 @@ export class Registration {
             btnProps: {
                 iconType: iconType,
                 iconSize: iconSize,
-                text: " " + btnText,
                 type: btnType,
                 onClick: (button) => {
-                    if (!isRegistered) {
-                        console.log("this is what's in isRegistered: " + isRegistered);
-                        // TO-DO upload a document to the 'Required Docs' library
-                        Modal.setHeader(ContextInfo.userDisplayName);
+                    let waitListedUserIds = this._item.WaitListedUsersId ? this._item.WaitListedUsersId.results : [];
+                    let registeredUserIds = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results : [];
 
-                        let elContainer = document.createElement("div");
-                        // Upload Button
-                        Components.Button({
-                            el: elContainer,
-                            text: "Upload a Document",
-                            type: Components.ButtonTypes.OutlineDark,
-                            // isLarge: true,
-                            onClick: (ev, item) => {
-                                // Show the file upload dialog
-                                Helper.ListForm.showFileDialog().then(fileInfo => {
-                                    // Upload the file
-                                    List(Strings.Lists.Templates).RootFolder().Files().add(fileInfo.name, true, fileInfo.data).execute(
-                                        // Success
-                                        file => {
-                                            this._readyUser.push(ContextInfo.userLoginName);
-                                            alert("File successfully uploaded! Please Register to confirm enrollment.");
-                                        },
-                                        // Error 
-                                        err => {
-                                            alert("Error uploading file");
-                                        }
-                                    )
-                                }
-                                )
-                            }
-                        });
+                    // See if the user is unregistered
+                    let isUnregistered = btnText == "Unregister";
+                    let userIsRegistering = btnText == "Register";
 
-                        Modal.setBody(elContainer);
+                    // Display a loading dialog
+                    LoadingDialog.setHeader(dlg);
+                    LoadingDialog.setBody(dlg);
+                    LoadingDialog.show();
 
-                        Modal.setFooter(Components.ButtonGroup({
-                            buttons: [
-                                {
-                                    text: "Register",
-                                    type: Components.ButtonTypes.Primary,
-                                    onClick: () => {
-                                        // "has-uploaded-documents" flag
-                                        let hasUploaded: boolean = false;
+                    // The metadata to be updated
+                    let updateFields = {};
 
-                                        // Check if the current user has uploaded any documents
-                                        for (let i = 0; i < this._readyUser.length; i++) {
-                                            if (this._readyUser[i] === ContextInfo.userLoginName) {
-                                                hasUploaded = true;
-                                            }
-                                        }
+                    // See if the user is on the wait list
+                    if (userOnWaitList) {
+                        // Remove the user from the waitlist
+                        let userIdx = waitListedUserIds.indexOf(userID);
+                        waitListedUserIds.splice(userIdx, 1);
 
-                                        // See if the user has uploaded required docs
-                                        if (hasUploaded) {
-                                            Modal.hide();
-
-                                            let waitListedUserIds = this._item.WaitListedUsersId ? this._item.WaitListedUsersId.results : [];
-                                            let registeredUserIds = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results : [];
-
-                                            // See if the user is unregistered
-                                            let isUnregistered = btnText == "Unregister";
-                                            let userIsRegistering = btnText == "Register";
-
-                                            // Display a loading dialog
-                                            LoadingDialog.setHeader(dlg);
-                                            LoadingDialog.setBody(dlg);
-                                            LoadingDialog.show();
-
-                                            // The metadata to be updated
-                                            let updateFields = {};
-
-                                            // See if the user is on the wait list
-                                            if (userOnWaitList) {
-                                                // Remove the user from the waitlist
-                                                let userIdx = waitListedUserIds.indexOf(userID);
-                                                waitListedUserIds.splice(userIdx, 1);
-
-                                                // Set the metadata
-                                                updateFields = {
-                                                    WaitListedUsersId: { results: waitListedUserIds },
-                                                };
-                                            }
-                                            // Else, see if the event is full and the user is not registered
-                                            else if (eventFull && !isRegistered) {
-                                                // Add the user to the waitlist
-                                                waitListedUserIds.push(ContextInfo.userId);
-
-                                                // Set the metadata
-                                                updateFields = {
-                                                    WaitListedUsersId: { results: waitListedUserIds },
-                                                };
-                                            }
-                                            // Else, see if the user is registered
-                                            else if (isRegistered) {
-                                                // Get the user ids
-                                                let userIdx = registeredUserIds.indexOf(
-                                                    ContextInfo.userId
-                                                );
-
-                                                // Remove the user
-                                                registeredUserIds.splice(userIdx, 1);
-
-                                                //if the event was full, add the next waitlist user
-                                                if (eventFull && waitListedUserIds.length > 0) {
-                                                    // Set the index
-                                                    userFromWaitlist = waitListedUserIds[0];
-                                                    let idx = waitListedUserIds.indexOf(userFromWaitlist);
-
-                                                    // Remove from waitlist
-                                                    waitListedUserIds.splice(idx, 1);
-
-                                                    // Add to registered users
-                                                    registeredUserIds.push(userFromWaitlist);
-                                                    registerUserFromWaitlist = true;
-                                                }
-
-                                                // Set the metadata
-                                                updateFields = {
-                                                    OpenSpots: parseInt(this._item.OpenSpots) + 1,
-                                                    RegisteredUsersId: { results: registeredUserIds },
-                                                    WaitListedUsersId: { results: waitListedUserIds },
-                                                };
-                                            }
-                                            // Else, the event is open
-                                            else {
-                                                // Add the user
-                                                registeredUserIds.push(ContextInfo.userId);
-
-                                                // Set the metadata
-                                                updateFields = {
-                                                    OpenSpots: parseInt(this._item.OpenSpots) - 1,
-                                                    RegisteredUsersId: { results: registeredUserIds },
-                                                };
-                                            }
-
-                                            // Update the item
-                                            this._item.update(updateFields).execute(
-                                                // Success
-                                                () => {
-                                                    // Send email
-                                                    Registration.sendMail(this._item, userFromWaitlist, userIsRegistering, false).then(() => {
-                                                        // Hide the dialog
-                                                        LoadingDialog.hide();
-
-                                                        // Refresh the dashboard
-                                                        this._onRefresh();
-                                                    });
-                                                },
-                                                // Error
-                                                () => {
-                                                    // TODO
-                                                }
-                                            );
-                                        }
-                                        // Else, the user has not uploaded required docs
-                                        else {
-                                            // Notify the user to upload before registering
-                                            alert("UPLOAD REQUIRED DOCS FIRST!");
-                                        }
-                                    }
-                                },
-                                {
-                                    text: "Cancel",
-                                    type: Components.ButtonTypes.Secondary,
-                                    onClick: () => {
-                                        Modal.hide();
-                                    }
-                                }
-                            ]
-                        }).el);
-
-                        // Modal Properties
-                        Modal.setType(Components.ModalTypes.XLarge);
-
-                        // Display the modal
-                        Modal.show();
+                        // Set the metadata
+                        updateFields = {
+                            WaitListedUsersId: { results: waitListedUserIds },
+                        };
                     }
-                    else {
-                        console.log("this is what's in isRegistered: " + isRegistered);
-                        let waitListedUserIds = this._item.WaitListedUsersId ? this._item.WaitListedUsersId.results : [];
-                        let registeredUserIds = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results : [];
+                    // Else, see if the event is full and the user is not registered
+                    else if (eventFull && !isRegistered) {
+                        // Add the user to the waitlist
+                        waitListedUserIds.push(ContextInfo.userId);
 
-                        // See if the user is unregistered
-                        let isUnregistered = btnText == "Unregister";
-                        let userIsRegistering = btnText == "Register";
-
-                        // Display a loading dialog
-                        LoadingDialog.setHeader(dlg);
-                        LoadingDialog.setBody(dlg);
-                        LoadingDialog.show();
-
-                        // The metadata to be updated
-                        let updateFields = {};
-
-                        // See if the user is on the wait list
-                        if (userOnWaitList) {
-                            // Remove the user from the waitlist
-                            let userIdx = waitListedUserIds.indexOf(userID);
-                            waitListedUserIds.splice(userIdx, 1);
-
-                            // Set the metadata
-                            updateFields = {
-                                WaitListedUsersId: { results: waitListedUserIds },
-                            };
-                        }
-                        // Else, see if the event is full and the user is not registered
-                        else if (eventFull && !isRegistered) {
-                            // Add the user to the waitlist
-                            waitListedUserIds.push(ContextInfo.userId);
-
-                            // Set the metadata
-                            updateFields = {
-                                WaitListedUsersId: { results: waitListedUserIds },
-                            };
-                        }
-                        // Else, see if the user is registered
-                        else if (isRegistered) {
-                            // Get the user ids
-                            let userIdx = registeredUserIds.indexOf(
-                                ContextInfo.userId
-                            );
-
-                            // Remove the user
-                            registeredUserIds.splice(userIdx, 1);
-
-                            //if the event was full, add the next waitlist user
-                            if (eventFull && waitListedUserIds.length > 0) {
-                                // Set the index
-                                userFromWaitlist = waitListedUserIds[0];
-                                let idx = waitListedUserIds.indexOf(userFromWaitlist);
-
-                                // Remove from waitlist
-                                waitListedUserIds.splice(idx, 1);
-
-                                // Add to registered users
-                                registeredUserIds.push(userFromWaitlist);
-                                registerUserFromWaitlist = true;
-                            }
-
-                            // Set the metadata
-                            updateFields = {
-                                OpenSpots: parseInt(this._item.OpenSpots) + 1,
-                                RegisteredUsersId: { results: registeredUserIds },
-                                WaitListedUsersId: { results: waitListedUserIds },
-                            };
-                        }
-                        // Else, the event is open
-                        else {
-                            // Add the user
-                            registeredUserIds.push(ContextInfo.userId);
-
-                            // Set the metadata
-                            updateFields = {
-                                OpenSpots: parseInt(this._item.OpenSpots) - 1,
-                                RegisteredUsersId: { results: registeredUserIds },
-                            };
-                        }
-
-                        // Update the item
-                        this._item.update(updateFields).execute(
-                            // Success
-                            () => {
-                                // Send email
-                                Registration.sendMail(this._item, userFromWaitlist, userIsRegistering, false).then(() => {
-                                    // Hide the dialog
-                                    LoadingDialog.hide();
-
-                                    // Refresh the dashboard
-                                    this._onRefresh();
-                                });
-                            },
-                            // Error
-                            () => {
-                                // TODO
-                            }
+                        // Set the metadata
+                        updateFields = {
+                            WaitListedUsersId: { results: waitListedUserIds },
+                        };
+                    }
+                    // Else, see if the user is registered
+                    else if (isRegistered) {
+                        // Get the user ids
+                        let userIdx = registeredUserIds.indexOf(
+                            ContextInfo.userId
                         );
+
+                        // Remove the user
+                        registeredUserIds.splice(userIdx, 1);
+
+                        //if the event was full, add the next waitlist user
+                        if (eventFull && waitListedUserIds.length > 0) {
+                            // Set the index
+                            userFromWaitlist = waitListedUserIds[0];
+                            let idx = waitListedUserIds.indexOf(userFromWaitlist);
+
+                            // Remove from waitlist
+                            waitListedUserIds.splice(idx, 1);
+
+                            // Add to registered users
+                            registeredUserIds.push(userFromWaitlist);
+                            registerUserFromWaitlist = true;
+                        }
+
+                        // Set the metadata
+                        updateFields = {
+                            OpenSpots: parseInt(this._item.OpenSpots) + 1,
+                            RegisteredUsersId: { results: registeredUserIds },
+                            WaitListedUsersId: { results: waitListedUserIds },
+                        };
+                    }
+                    // Else, the event is open
+                    else {
+                        // Add the user
+                        registeredUserIds.push(ContextInfo.userId);
+
+                        // Set the metadata
+                        updateFields = {
+                            OpenSpots: parseInt(this._item.OpenSpots) - 1,
+                            RegisteredUsersId: { results: registeredUserIds },
+                        };
                     }
 
+                    // Update the item
+                    this._item.update(updateFields).execute(
+                        // Success
+                        () => {
+                            // Send email
+                            Registration.sendMail(this._item, userFromWaitlist, userIsRegistering, false).then(() => {
+                                // Hide the dialog
+                                LoadingDialog.hide();
+
+                                // Refresh the dashboard
+                                this._onRefresh();
+                            });
+                        },
+                        // Error
+                        () => {
+                            // TODO
+                        }
+                    );
                 }
             }
         });
@@ -419,7 +223,6 @@ export class Registration {
     static sendMail(event: IEventItem, userId: number, userIsRegistering: boolean, userIsWaitlisted: boolean): PromiseLike<void> {
         // Return a promise
         return new Promise((resolve) => {
-
             // Do nothing if the user is unregistering from the event
             if (!userIsRegistering) { resolve(); return; }
 
@@ -429,13 +232,12 @@ export class Registration {
                 let body = `${ContextInfo.userDisplayName}, you have ${userIsRegistering ? "successfully registered for" : (userIsWaitlisted ? "successfully been added from the waitlist for" : "been removed from")} the following event:
                     <p><strong>Title:</strong>${event.Title}</p></br>
                     <p><strong>Description:</strong>${event.Description}</p></br>
-                    <p><strong>Start Date:</strong>${moment(event.StartDate).format("MMMM DD, YYYY HH:MM A")}</p></br>
-                    <p><strong>End Date:</strong>${moment(event.EndDate).format("MMMM DD, YYYY HH:MM A")}</p></br>
-                    <p><strong>Location:</strong>${event.Location}</p></br>`;
-
+                    <p><strong>Start Date:</strong>${moment(event.StartDate).format("MM-DD-YYYY HH:mm")}</p></br>
+                    <p><strong>End Date:</strong>${moment(event.EndDate).format("MM-DD-YYYY HH:mm")}</p></br>
+                    <p><strong>Location:</strong>${event.Location}`;
 
                 // Set the subject
-                let subject = `${userId > 0 ? "Added from the waitlist" : "Registered"} for the event: ${event.Title}`;
+                let subject = `Successfully ${userId > 0 ? "added from the waitlist" : "registered"} for the event: ${event.Title}`;
 
                 // See if the user email exists and is registering for the event
                 if (userEmail) {
