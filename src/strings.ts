@@ -21,13 +21,12 @@ const Strings = {
     GlobalVariable: "EventRegistration",
     Lists: {
         Events: "Events",
-        Templates: "Required Docs"
     },
     ProjectName: "Event Registration",
     ProjectDescription: "Allows users to sign up for events.",
     EventRegConfig: ContextInfo.webServerRelativeUrl + "/SiteAssets/Event-Registration/eventreg-config.json",
     SourceUrl: ContextInfo.webServerRelativeUrl + "/SiteAssets/Event-Registration/",
     SolutionUrl: ContextInfo.webServerRelativeUrl + "/sites/dev/SiteAssets/Event-Registration/index.html",
-    Version: "0.1",
+    Version: "2.0",
 };
 export default Strings;

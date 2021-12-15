@@ -68,7 +68,7 @@ export class DataSource {
         let today = moment();
         this._events.forEach((event) => {
             let startDate = event.StartDate;
-            if(moment(startDate).isAfter(today)) {
+            if (moment(startDate).isAfter(today)) {
                 activeEvents.push(event);
             }
         })
@@ -132,44 +132,6 @@ export class DataSource {
                 // Unable to determine the user permissions
                 this._eventRegPerms = {};
             });
-
-            // Once both queries are complete, return promise
-            web.done(() => {
-                // Resolve the request
-                resolve();
-            });
-        });
-    }
-
-    // Required Docs
-    private static _docs: IEventItem[] = null;
-    static get Docs(): IEventItem[] { return this._docs; }
-    static loadDocs(): PromiseLike<void> {
-        return new Promise((resolve, reject) => {
-
-            let web = Web();
-
-            // Load the data
-            web.Lists(Strings.Lists.Templates).RootFolder().query({
-                Expand: ["Folders", "Folders/Files", "Folders/Files/Author", "Folders/Files/ListItemAllFields", "Folders/Files/ModifiedBy", "Files", "Files/Author", "Files/ListItemAllFields", "Files/ModifiedBy"],
-                GetAllItems: true,
-                Top: 5000,
-                // Select: [
-                //     "*", "Modified"
-                // ]
-            }).execute(folder => {
-                // Set the folders and files
-                this._files = folder.Files.results;
-                this._folders = [];
-                for (let i = 0; i < folder.Folders.results.length; i++) {
-                    let subFolder = folder.Folders.results[i];
-                    // Ignore the OTB Forms internal folder  
-                    if (subFolder.Name != "Forms") { this._folders.push(subFolder as any); }
-                }
-
-                // Resolve the request
-                resolve();
-            }, reject);
 
             // Once both queries are complete, return promise
             web.done(() => {
@@ -244,10 +206,7 @@ export class DataSource {
                         this.GetAdminStatus().then(() => {
                             // Load the events
                             this.loadEvents().then(() => {
-                                this.loadDocs().then(() => {
-                                    // Resolve the request
-                                    resolve();
-                                }, reject);
+                                resolve();
                             }, reject);
                         }, reject);
                     }, reject);
@@ -290,41 +249,11 @@ export class DataSource {
         });
     }
 
-    // Templates Files 
-    private static _files: Types.SP.File[];
-    static get Files(): Types.SP.File[] { return this._files; }
-    private static _folders: Types.SP.FolderOData[];
-    static get Folders(): Types.SP.FolderOData[] { return this._folders; }
-    static loadTemplateFiles(): PromiseLike<void> {
-        // Return a promise
-        return new Promise((resolve, reject) => {
-            // Load the library
-            List(Strings.Lists.Templates).RootFolder().query({
-                Expand: [
-                    "Folders", "Folders/Files", "Folders/Files/Author", "Folders/Files/ListItemAllFields", "Folders/Files/ModifiedBy",
-                    "Files", "Files/Author", "Files/ListItemAllFields", "Files/ModifiedBy", "Files/CreatedBy"
-                ]
-            }).execute(folder => {
-                // Set the folders and files
-                this._files = folder.Files.results;
-                this._folders = [];
-                for (let i = 0; i < folder.Folders.results.length; i++) {
-                    let subFolder = folder.Folders.results[i];
-                    // Ignore the OTB Forms internal folder  
-                    if (subFolder.Name != "Forms") { this._folders.push(subFolder as any); }
-                }
-                // Resolve the request
-                resolve();
-            }, reject);
-        });
-    }
-
     // Security Groups
     private static _managerId: number = null;
     static get ManagersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._managerId; }
     private static _memberId: number = null;
     static get MembersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._memberId; }
-    static get DocLibUrl(): string { return ContextInfo.webServerRelativeUrl + "/RequiredDocs/Forms/AllItems.aspx"; }
     static loadSecurityGroupUrls(): PromiseLike<void> {
         return new Promise((resolve) => {
             let web = Web();

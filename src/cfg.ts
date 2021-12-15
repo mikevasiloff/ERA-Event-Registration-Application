@@ -107,21 +107,6 @@ export const Configuration = Helper.SPConfig({
                 }
             ]
         },
-        // Document Library
-        {
-            ListInformation: {
-                Title: Strings.Lists.Templates,
-                BaseTemplate: SPTypes.ListTemplateType.DocumentLibrary
-            },
-            ViewInformation: [
-                {
-                    ViewName: "All Items",
-                    ViewFields: [
-                        "ModifiedBy"
-                    ]
-                }
-            ]
-        },
     ]
 });
 

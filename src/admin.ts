@@ -81,19 +81,6 @@ export class Admin {
         iconType: personBoundingBox,
         iconSize: 18,
       });
-      
-      // Add an button to manage the Required Docs library
-      navItems.push({
-        className: "btn-primary",
-        text: " REQUIRED DOCUMENTS",
-        isButton: true,
-        onClick: () => {
-          // Show the manager's group
-          window.open(DataSource.DocLibUrl, "_blank");
-        },
-        iconType: collectionFill,
-        iconSize: 18,
-      });
     }
 
     // Return the nav items
