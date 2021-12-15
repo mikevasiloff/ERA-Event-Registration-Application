@@ -71,7 +71,6 @@ export class App {
       el: this._el,
       useModal: true,
       // hideFilter: !this._isAdmin ? true : false,
-      // hideHeader: DataSource.Configuration.hideHeader,
       filters: {
         items: [
           {
@@ -360,7 +359,7 @@ export class App {
           {
             // 9 - POC
             name: "",
-            title: "POC",
+            title: "Point Of Contact",
             onRenderCell: (el, column, item: IEventItem) => {
               let pocs = ((item["POC"] ? item["POC"].results : null) || []).sort((a, b) => {
                 if (a.Title < b.Title) { return -1; }
