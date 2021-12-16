@@ -419,18 +419,20 @@ export class Admin {
       className: "eventRegAdmin",
       items: [
         {
-          text: eventItem.IsCancelled ? " Uncancel" : " Cancel",
+          text: " Register User",
+          isDisabled: eventItem.IsCancelled || Registration.isFull(eventItem),
           onClick: (button) => {
-            // See if the event is cancelled
-            if (eventItem.IsCancelled) {
-              EventForms.uncancel(eventItem, onRefresh);
-            } else {
-              EventForms.cancel(eventItem, onRefresh);
-            }
+            this.registerUser(eventItem, onRefresh);
           },
         },
         {
-          isDisabled: eventItem.IsCancelled,
+          text: " Unregister User",
+          isDisabled: eventItem.IsCancelled || Registration.isEmpty(eventItem),
+          onClick: (button) => {
+            this.unregisterUser(eventItem, onRefresh);
+          },
+        },
+        {
           text: " Edit",
           onClick: (button) => {
             EventForms.edit(eventItem, onRefresh);
@@ -443,17 +445,14 @@ export class Admin {
           },
         },
         {
-          text: " Manage Waitlist",
-          isDisabled: eventItem.IsCancelled || eventItem.WaitListedUsersId == null,
+          text: eventItem.IsCancelled ? " Uncancel" : " Cancel",
           onClick: (button) => {
-            this.manageWaitlist(eventItem, onRefresh);
-          },
-        },
-        {
-          text: " Register User",
-          isDisabled: eventItem.IsCancelled || Registration.isFull(eventItem),
-          onClick: (button) => {
-            this.registerUser(eventItem, onRefresh);
+            // See if the event is cancelled
+            if (eventItem.IsCancelled) {
+              EventForms.uncancel(eventItem, onRefresh);
+            } else {
+              EventForms.cancel(eventItem, onRefresh);
+            }
           },
         },
         {
@@ -463,10 +462,10 @@ export class Admin {
           },
         },
         {
-          text: " Unregister User",
-          isDisabled: eventItem.IsCancelled || Registration.isEmpty(eventItem),
+          text: " Manage Waitlist",
+          isDisabled: eventItem.IsCancelled || eventItem.WaitListedUsersId == null,
           onClick: (button) => {
-            this.unregisterUser(eventItem, onRefresh);
+            this.manageWaitlist(eventItem, onRefresh);
           },
         },
         {
