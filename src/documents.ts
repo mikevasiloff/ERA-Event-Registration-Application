@@ -15,17 +15,15 @@ export class DocumentsView {
     private _item: IEventItem = null;
     private _el: HTMLElement = null;
     private _isAdmin: boolean = false;
-    private _canEditEvent: boolean = false;
     private _onRefresh: () => void = null;
     private _attachmentNumber: number = 0;
     private _isUploaded: boolean = false;
 
     // Constructor
-    constructor(el: HTMLElement, item: IEventItem, isAdmin: boolean, canEditEvent: boolean, onRefresh: () => void) {
+    constructor(el: HTMLElement, item: IEventItem, isAdmin: boolean, onRefresh: () => void) {
         this._item = item;
         this._el = el;
         this._isAdmin = isAdmin;
-        this._canEditEvent = canEditEvent;
         this._onRefresh = onRefresh;
         this._attachmentNumber = this._item.AttachmentFiles.results.length;
         this._isUploaded = (this._attachmentNumber > 0) ? true : false;
@@ -242,7 +240,6 @@ export class DocumentsView {
                                 el,
                                 text: "Delete the document",
                                 className: "ms-2",
-                                isDisabled: !this._canEditEvent,
                                 iconType: fileEarmarkX,
                                 iconSize: 24,
                                 toggle: "tooltip",

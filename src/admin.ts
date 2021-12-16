@@ -13,7 +13,7 @@ import { Registration } from "./registration";
 
 export class Admin {
   // Generates the navigation items
-  generateNavItems(canEditEvent: boolean, onRefresh: () => void): Components.INavbarItem[] {
+  generateNavItems(onRefresh: () => void): Components.INavbarItem[] {
     let navItems: Components.INavbarItem[] = [];
 
     // See if this is the admin
@@ -21,7 +21,6 @@ export class Admin {
       // Add the new event option
       navItems.push({
         className: "btn-primary",
-        isDisabled: !canEditEvent,
         text: " NEW EVENT",
         isButton: true,
         onClick: () => {
@@ -35,7 +34,6 @@ export class Admin {
       // Add the manage groups option
       navItems.push({
         className: "btn-primary",
-        isDisabled: !canEditEvent,
         text: " MANAGE GROUPS",
         isButton: true,
         items: [
@@ -414,7 +412,7 @@ export class Admin {
   }
 
   // Renders the event menu
-  renderEventMenu(el: HTMLElement, eventItem: IEventItem, canEditEvent: boolean, canDeleteEvent: boolean, onRefresh: () => void) {
+  renderEventMenu(el: HTMLElement, eventItem: IEventItem, onRefresh: () => void) {
     // Add the admin dropdown
     let adminDropdown = Components.Dropdown({
       el: el,
@@ -432,14 +430,13 @@ export class Admin {
           },
         },
         {
-          isDisabled: eventItem.IsCancelled || !canEditEvent,
+          isDisabled: eventItem.IsCancelled,
           text: " Edit",
           onClick: (button) => {
             EventForms.edit(eventItem, onRefresh);
           },
         },
         {
-          isDisabled: !canDeleteEvent,
           text: " Delete",
           onClick: (button) => {
             EventForms.delete(eventItem, onRefresh);

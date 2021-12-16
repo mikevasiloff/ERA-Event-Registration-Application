@@ -17,9 +17,6 @@ import Strings from "./strings";
  */
 export class App {
   //global vars
-  private _canDeleteEvent: boolean;
-  private _canEditEvent: boolean;
-  private _canViewEvent: boolean;
   private _dashboard: Dashboard = null;
   private _el: HTMLElement = null;
   private _isAdmin: boolean = false;
@@ -30,9 +27,6 @@ export class App {
     ItemForm.ListName = Strings.Lists.Events;
 
     // Set the global variables
-    this._canDeleteEvent = Helper.hasPermissions(DataSource.EventRegPerms, [SPTypes.BasePermissionTypes.DeleteListItems]);
-    this._canEditEvent = Helper.hasPermissions(DataSource.EventRegPerms, [SPTypes.BasePermissionTypes.EditListItems]);
-    this._canViewEvent = Helper.hasPermissions(DataSource.EventRegPerms, [SPTypes.BasePermissionTypes.ViewListItems]);
     this._el = el;
 
     // Get admin status
@@ -87,7 +81,7 @@ export class App {
         ],
       },
       navigation: {
-        items: admin.generateNavItems(this._canEditEvent, () => { this.refresh(); }),
+        items: admin.generateNavItems( () => { this.refresh(); } ),
       },
       footer: {
         itemsEnd: [
@@ -164,7 +158,6 @@ export class App {
               Components.Button({
                 el: el,
                 text: " View",
-                isDisabled: !this._canViewEvent,
                 iconType: calendarEvent,
                 iconSize: 24,
                 type: Components.ButtonTypes.OutlinePrimary,
@@ -292,7 +285,7 @@ export class App {
             title: "Documents",
             onRenderCell: (el, column, item: IEventItem) => {
               // Render the document column
-              new DocumentsView(el, item, this._isAdmin, this._canEditEvent, () => { this.refresh(); });
+              new DocumentsView(el, item, this._isAdmin, () => { this.refresh(); });
             },
           },
           {
@@ -388,7 +381,7 @@ export class App {
             onRenderCell: (el, column, item: IEventItem) => {
               if (this._isAdmin) {
                 // Render the admin menu
-                admin.renderEventMenu(el, item, this._canEditEvent, this._canDeleteEvent, () => { this.refresh(); });
+                admin.renderEventMenu(el, item, () => { this.refresh(); });
               } else {
                 // Render the user menu
                 member.renderEventMenu(el, item);
