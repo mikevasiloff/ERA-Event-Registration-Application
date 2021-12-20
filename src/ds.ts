@@ -38,6 +38,8 @@ export interface IEventItem extends Types.SP.ListItemOData {
         }[]
     };
     WaitListedUsersId: { results: number[] };
+    RecurrenceSetting: string;
+    RecurrencePeriod: number;
 }
 
 // Configuration
@@ -92,6 +94,7 @@ export class DataSource {
                         "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
                         "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
                         "Editor/Id", "Editor/Title",
+                        "RecurrenceSetting", "RecurrencePeriod",
                     ]
                 }).execute(
                     // Success
