@@ -1,6 +1,6 @@
 import { LoadingDialog } from "dattatable";
 import { Components, ContextInfo, Utility, Web } from "gd-sprest-bs";
-import { IEventItem } from "./ds";
+import { DataSource, IEventItem } from "./ds";
 import * as moment from "moment";
 import { calendarPlusFill } from "gd-sprest-bs/build/icons/svgs/calendarPlusFill"
 import { calendarMinusFill } from "gd-sprest-bs/build/icons/svgs/calendarMinusFill"
@@ -60,6 +60,7 @@ export class Registration {
 
     // Renders the registration button
     private render() {
+
         // See if the user if registered
         let isRegistered = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results.indexOf(ContextInfo.userId) >= 0 : false;
 
