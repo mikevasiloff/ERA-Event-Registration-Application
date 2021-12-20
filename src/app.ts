@@ -11,7 +11,6 @@ import { Member } from "./member";
 import { Registration } from "./registration";
 import Strings from "./strings";
 
-
 /**
  * Main Application
  */
@@ -190,6 +189,14 @@ export class App {
 
               });
             },
+          },
+          {
+            name: " ",
+            title: " ",
+            onRenderCell: (el) => {
+              let selectToDelete: Components.ICheckboxGroupItem[];
+              el: selectToDelete;
+            }
           },
           {
             // 1 - Title

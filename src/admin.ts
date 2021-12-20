@@ -4,7 +4,7 @@ import { calendarPlus } from "gd-sprest-bs/build/icons/svgs/calendarPlus";
 import { peopleFill } from "gd-sprest-bs/build/icons/svgs/peopleFill";
 import { personBoundingBox } from "gd-sprest-bs/build/icons/svgs/personBoundingBox";
 import { gearWideConnected } from "gd-sprest-bs/build/icons/svgs/gearWideConnected";
-import { collectionFill } from "gd-sprest-bs/build/icons/svgs/collectionFill";
+import { fileEarmarkMinus } from "gd-sprest-bs/build/icons/svgs/fileEarmarkMinus";
 import * as moment from "moment";
 import { Configuration } from "./cfg";
 import { DataSource, IEventItem } from "./ds";
@@ -28,6 +28,19 @@ export class Admin {
           EventForms.create(onRefresh);
         },
         iconType: calendarPlus,
+        iconSize: 18,
+      });
+
+      // Add the remove event option
+      navItems.push({
+        className: "btn-primary",
+        text: " REMOVE EVENT",
+        isButton: true,
+        onClick: () => {
+          // TO DO : Delete selected events
+          
+        },
+        iconType: fileEarmarkMinus,
         iconSize: 18,
       });
 
