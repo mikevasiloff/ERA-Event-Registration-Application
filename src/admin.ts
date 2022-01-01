@@ -31,19 +31,7 @@ export class Admin {
         iconSize: 18,
       });
 
-      // Add the remove event option
-      navItems.push({
-        className: "btn-primary",
-        text: " REMOVE EVENT",
-        isButton: true,
-        onClick: () => {
-          // TO DO : Delete selected events
-          
-        },
-        iconType: fileEarmarkMinus,
-        iconSize: 18,
-      });
-
+      
       // Add the manage groups option
       navItems.push({
         className: "btn-primary",

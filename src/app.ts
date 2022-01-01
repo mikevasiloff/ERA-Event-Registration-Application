@@ -191,14 +191,6 @@ export class App {
             },
           },
           {
-            name: " ",
-            title: " ",
-            onRenderCell: (el) => {
-              let selectToDelete: Components.ICheckboxGroupItem[];
-              el: selectToDelete;
-            }
-          },
-          {
             // 1 - Title
             name: "Title",
             title: "Title",
