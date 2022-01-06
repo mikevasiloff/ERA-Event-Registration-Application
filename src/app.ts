@@ -65,6 +65,11 @@ export class App {
       useModal: true,
       // hideFilter: !this._isAdmin ? true : false,
       filters: {
+        onClear: () => {
+              this._dashboard.refresh(
+                DataSource.ActiveEvents
+              );
+        },
         items: [
           {
             header: "Event Status",
@@ -73,7 +78,18 @@ export class App {
               let filterSet: boolean = value === "" ? false : true;
               DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
-                value === "" ? DataSource.ActiveEvents : DataSource.Events
+                value === "Active" || value === "" ? DataSource.ActiveEvents : (value === "All" ? DataSource.Events : DataSource.InActiveEvents)
+              );
+            },
+          },
+          {
+            header: "Recurring Events",
+            items: DataSource.RecurrenceFilters,
+            onFilter: (value: string) => {
+              let filterSet: boolean = value === "" ? false : true;
+              DataSource.SetFilter(filterSet);
+              this._dashboard.refresh(
+                value === "Active" ? DataSource.ReccurentEvents : (value === "All" ? DataSource.ActiveReccurentEvents : DataSource.InactiveReccurentEvents)
               );
             },
           },

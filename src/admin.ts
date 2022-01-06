@@ -51,6 +51,13 @@ export class Admin {
             },
           },
           {
+            text: "Events",
+            onClick: () => {
+              // Manage events list
+              window.open(DataSource.ListUrl, "_blank");
+            }
+          },
+          {
             text: "App",
             onClick: () => {
               // Display a loading dialog
