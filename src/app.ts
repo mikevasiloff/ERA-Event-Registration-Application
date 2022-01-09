@@ -66,9 +66,9 @@ export class App {
       // hideFilter: !this._isAdmin ? true : false,
       filters: {
         onClear: () => {
-              this._dashboard.refresh(
-                DataSource.ActiveEvents
-              );
+          this._dashboard.refresh(
+            DataSource.ActiveEvents
+          );
         },
         items: [
           {
@@ -78,7 +78,7 @@ export class App {
               let filterSet: boolean = value === "" ? false : true;
               DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
-                value === "Active" || value === "" ? DataSource.ActiveEvents : (value === "All" ? DataSource.Events : DataSource.InActiveEvents)
+                value === "Active Events" || value === "" ? DataSource.ActiveEvents : (value === "All Events" ? DataSource.Events : DataSource.InActiveEvents)
               );
             },
           },
@@ -89,14 +89,14 @@ export class App {
               let filterSet: boolean = value === "" ? false : true;
               DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
-                value === "Active" ? DataSource.ReccurentEvents : (value === "All" ? DataSource.ActiveReccurentEvents : DataSource.InactiveReccurentEvents)
+                value === "Active Recurring Events" ? DataSource.ActiveReccurentEvents : (value === "All Recurring Events" ? DataSource.ReccurentEvents : DataSource.InactiveReccurentEvents)
               );
             },
           },
         ],
       },
       navigation: {
-        items: admin.generateNavItems( () => { this.refresh(); } ),
+        items: admin.generateNavItems(() => { this.refresh(); }),
       },
       footer: {
         itemsEnd: [
@@ -219,7 +219,6 @@ export class App {
               let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
               let startReset = startDate.set({ hour: time.get('hour'), minute: time.get('minute') });
               let dateDiff = moment(startReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
-              console.log("dateDiff: " + moment(currReset).format("DD MMM YYYY hh:mm a") + " - " + moment(startReset).format("DD MMM YYYY hh:mm a") + " = " + dateDiff);
 
               // See if this event is cancelled
               if (item.IsCancelled) {
@@ -256,8 +255,67 @@ export class App {
           },
           {
             // 2 - Description
-            name: "Description",
-            title: "Description",
+            name: "",
+            title: "Recurrence",
+            onRenderCell: (el, column, item: IEventItem) => {
+              // Render a badge
+              if (item.RecurrenceSetting === "Daily") {
+                // Set the element to the Recurrence Setting
+                el.innerHTML = item.RecurrenceSetting;
+                
+                // Update the style
+                el.style.fontWeight = "bold";
+
+                // Add a break after title
+                let elBreak = document.createElement("br");
+                el.appendChild(elBreak);
+                Components.Badge({
+                  el,
+                  content: item.RecurrencePeriod + " DAYS",
+                  isPill: true,
+                  type: Components.BadgeTypes.Primary
+                });
+              } else if (item.RecurrenceSetting === "Weekly") {
+                // Set the element to the Recurrence Setting
+                el.innerHTML = item.RecurrenceSetting;
+
+                // Update the style
+                el.style.fontWeight = "bold";
+
+                // Add a break after title
+                let elBreak = document.createElement("br");
+                el.appendChild(elBreak);
+                Components.Badge({
+                  el,
+                  content: item.RecurrencePeriod + " WEEKS",
+                  isPill: true,
+                  type: Components.BadgeTypes.Primary
+                });
+              } else if (item.RecurrenceSetting === "Monthly") {
+                // Set the element to the Recurrence Setting
+                el.innerHTML = item.RecurrenceSetting;
+                // Update the style
+                el.style.fontWeight = "bold";
+
+                // Add a break after title
+                let elBreak = document.createElement("br");
+                el.appendChild(elBreak);
+                Components.Badge({
+                  el,
+                  content: item.RecurrencePeriod + " MONTHLY",
+                  isPill: true,
+                  type: Components.BadgeTypes.Primary
+                });
+              }
+              else {
+                Components.Badge({
+                  el,
+                  content: "NONE",
+                  isPill: true,
+                  type: Components.BadgeTypes.Danger
+                });
+              }
+            }
           },
           {
             // 3 - Start Date

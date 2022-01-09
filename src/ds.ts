@@ -213,24 +213,10 @@ export class DataSource {
         });
     }
 
-    // Status Filters
-    // private static _statusFilters: Components.ICheckboxGroupItem[] = [{
-    //     label: "Show all active and inactive events",
-    //     type: Components.CheckboxGroupTypes.Switch,
-    //     isSelected: false
-    // }];
-
-    // Recurring Events Filter
-    // private static _recurrenceFilters: Components.ICheckboxGroupItem[] = [{
-    //     label: "Show only recurring events",
-    //     type: Components.CheckboxGroupTypes.Switch,
-    //     isSelected: false
-    // }];
-
     static get StatusFilters(): Components.ICheckboxGroupItem[] { 
         let items: Components.ICheckboxGroupItem[] = [];
 
-        let values: string[] = ["Active", "Inactive", "All"];
+        let values: string[] = ["Active Events", "Inactive Events", "All Events"];
 
         for(let i = 0; i < values.length; i++) {
             let value = values[i];
@@ -238,17 +224,16 @@ export class DataSource {
             items.push({
                 label: value,
                 type: Components.CheckboxGroupTypes.Switch,
-                isSelected: value === "Active" ? true : false
+                isSelected: value === "Active Events" ? true : false
             });
         }   
 
-        // return this._statusFilters; 
         return items;
     }
     static get RecurrenceFilters(): Components.ICheckboxGroupItem[] { 
         let items: Components.ICheckboxGroupItem[] = [];
 
-        let values: string[] = ["Active", "Inactive", "All"];
+        let values: string[] = ["Active Recurring Events", "Inactive Recurring Events", "All Recurring Events"];
 
         for(let i = 0; i < values.length; i++) {
             let value = values[i];
@@ -256,12 +241,11 @@ export class DataSource {
             items.push({
                 label: value,
                 type: Components.CheckboxGroupTypes.Switch,
-                isSelected: value === "Active" ? true : false
+                isSelected: value === "Active Recurring Events" ? true : false
             });
         }   
 
         return items;
-        // return this._recurrenceFilters; 
     }
 
     // User Login Name

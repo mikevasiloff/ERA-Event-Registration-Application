@@ -43,6 +43,7 @@ export const Configuration = Helper.SPConfig({
                     title: "POC",
                     type: Helper.SPCfgFieldType.User,
                     multi: true,
+                    required: true,
                     selectionMode: SPTypes.FieldUserSelectionType.PeopleOnly
                 } as Helper.IFieldInfoUser,
                 {
@@ -108,18 +109,12 @@ export const Configuration = Helper.SPConfig({
                         "Monthly",
                     ],
                     defaultValue: "No",
-                    showInViewForms: false,
-                    showInEditForm: false,
-                    showInNewForm: true,
                 } as Helper.IFieldInfoChoice,
                 {
                     name: "RecurrencePeriod",
                     title: "Recurrence Period",
                     type: Helper.SPCfgFieldType.Number,
                     defaultValue: "0",
-                    showInViewForms: false,
-                    showInEditForm: false,
-                    showInNewForm: true,
                 } as Helper.IFieldInfoNumber
             ],
             ViewInformation: [
