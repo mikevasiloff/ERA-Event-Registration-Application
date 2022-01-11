@@ -48,19 +48,12 @@ END:VCALENDAR`;
 
   // Renders the calendar
   private render() {
-    let showAddToCalendar: boolean = false;
 
     // Determine if the user is currently registered
     let isRegistered = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results.indexOf(ContextInfo.userId) >= 0 : false;
 
-    // See if this is an admin
-    if (!this._isAdmin) {
-      // See if they are registered
-      if (isRegistered) showAddToCalendar = true;
-    }
-
     // See if we are showing the calendar
-    if (showAddToCalendar) {
+    if (isRegistered) {
       // Render the view tooltip
       let tooltip = Components.Tooltip({
         el: this._el,
@@ -71,7 +64,7 @@ END:VCALENDAR`;
           iconSize: 24,
           toggle: "tooltip",
           type: Components.ButtonTypes.OutlinePrimary,
-          href: showAddToCalendar ? this.getCalendarURL(this._item) : "",
+          href: isRegistered ? this.getCalendarURL(this._item) : "",
         }
       });
 

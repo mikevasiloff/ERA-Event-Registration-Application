@@ -95,11 +95,11 @@ export class App {
           dom: 'rt<"row"<"col-sm-4"l><"col-sm-4"i><"col-sm-4"p>>',
           columnDefs: [
             {
-              targets: [0, 6, 10, 11, 12],
+              targets: [0, 5, 9, 10, 11],
               orderable: false,
               searchable: false,
             },
-            { width: "10%", targets: [3, 4] },
+            { width: "10%", targets: [4, 5] },
             {
               targets: 2, render: function (data, type, row) {
                 // Limit the length of the Description column to 50 chars
@@ -121,7 +121,6 @@ export class App {
                 return '<span title="' + esc(data) + '">' + trunc + '&#8230;</span>';
               }
             },
-            this._isAdmin || DataSource.Configuration.hideAddToCalendarColumn == true ? { targets: [12], visible: false } : null
           ],
           // Add some classes to the dataTable elements
           drawCallback: function () {
@@ -134,7 +133,7 @@ export class App {
             jQuery(".dataTables_length", this._table).addClass("pt-2");
             jQuery(".dataTables_paginate", this._table).addClass("pt-03");
           },
-          lengthMenu: [50, 10, 25, 100],
+          lengthMenu: [10, 25, 50, 100],
           // Sort descending by Start Date
           order: [[3, "asc"]],
           language: {
@@ -245,11 +244,6 @@ export class App {
                 });
               }
             },
-          },
-          {
-            // 2 - Description
-            name: "Description",
-            title: "Description",
           },
           {
             // 3 - Start Date
