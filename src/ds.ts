@@ -257,6 +257,7 @@ export class DataSource {
     static get ManagersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._managerId; }
     private static _memberId: number = null;
     static get MembersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._memberId; }
+    static get ListUrl(): string { return ContextInfo.webServerRelativeUrl + "Lists/Events/AllItems.aspx" }   
     static loadSecurityGroupUrls(): PromiseLike<void> {
         return new Promise((resolve) => {
             let web = Web();

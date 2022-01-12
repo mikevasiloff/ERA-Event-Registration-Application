@@ -1,10 +1,8 @@
 import { InstallationRequired, LoadingDialog, Modal } from "dattatable";
 import { Components, Helper, Utility } from "gd-sprest-bs";
 import { calendarPlus } from "gd-sprest-bs/build/icons/svgs/calendarPlus";
-import { peopleFill } from "gd-sprest-bs/build/icons/svgs/peopleFill";
-import { personBoundingBox } from "gd-sprest-bs/build/icons/svgs/personBoundingBox";
 import { gearWideConnected } from "gd-sprest-bs/build/icons/svgs/gearWideConnected";
-import { fileEarmarkMinus } from "gd-sprest-bs/build/icons/svgs/fileEarmarkMinus";
+import { sliders } from "gd-sprest-bs/build/icons/svgs/sliders";  
 import * as moment from "moment";
 import { Configuration } from "./cfg";
 import { DataSource, IEventItem } from "./ds";
@@ -31,23 +29,10 @@ export class Admin {
         iconSize: 18,
       });
 
-      // Add the remove event option
-      navItems.push({
-        className: "btn-primary",
-        text: " REMOVE EVENT",
-        isButton: true,
-        onClick: () => {
-          // TO DO : Delete selected events
-          
-        },
-        iconType: fileEarmarkMinus,
-        iconSize: 18,
-      });
-
       // Add the manage groups option
       navItems.push({
         className: "btn-primary",
-        text: " MANAGE GROUPS",
+        text: " MANAGE SETTINGS",
         isButton: true,
         items: [
           {
@@ -64,32 +49,33 @@ export class Admin {
               window.open(DataSource.MembersUrl, "_blank");
             },
           },
+          {
+            text: "Events",
+            onClick: () => {
+              // Show the manager's group
+              window.open(DataSource.ListUrl, "_blank");
+            },
+          },
+          {
+            text: "App",
+            onClick: () => {
+              // Display a loading dialog
+              LoadingDialog.setHeader("Analyzing the Assets");
+              LoadingDialog.setBody("Checking the SharePoint assets.");
+              LoadingDialog.show();
+
+              // Determine if an install is required
+              InstallationRequired.requiresInstall(Configuration).then(() => {
+                // Hide the dialog
+                LoadingDialog.hide();
+
+                // Show the installation dialog
+                InstallationRequired.showDialog();
+              });
+            },
+          },
         ],
-        iconType: peopleFill,
-        iconSize: 18,
-      });
-
-      // Add an option to manage the application
-      navItems.push({
-        className: "btn-primary",
-        text: " MANAGE APP",
-        isButton: true,
-        onClick: () => {
-          // Display a loading dialog
-          LoadingDialog.setHeader("Analyzing the Assets");
-          LoadingDialog.setBody("Checking the SharePoint assets.");
-          LoadingDialog.show();
-
-          // Determine if an install is required
-          InstallationRequired.requiresInstall(Configuration).then(() => {
-            // Hide the dialog
-            LoadingDialog.hide();
-
-            // Show the installation dialog
-            InstallationRequired.showDialog();
-          });
-        },
-        iconType: personBoundingBox,
+        iconType: sliders,
         iconSize: 18,
       });
     }
