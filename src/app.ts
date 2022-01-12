@@ -7,6 +7,7 @@ import { Admin } from "./admin";
 import { Calendar } from "./calendar";
 import { DocumentsView } from "./documents"
 import { DataSource, IEventItem } from "./ds";
+import { Icons } from "./icon"
 import { Member } from "./member";
 import { Registration } from "./registration";
 import Strings from "./strings";
@@ -64,6 +65,17 @@ export class App {
       el: this._el,
       useModal: true,
       // hideFilter: !this._isAdmin ? true : false,
+      hideHeader: false,
+      header: {
+        title: DataSource.Configuration.headerTitle || Strings.ProjectName,
+        onRendered: (el) => {
+          // See if the image url is defined
+          if (DataSource.Configuration.headerImage) {
+            // Update the header
+            el.style.backgroundImage = "url(" + DataSource.Configuration.headerImage + ")";
+          }
+        }
+      },
       filters: {
         onClear: () => {
           this._dashboard.refresh(
@@ -78,7 +90,7 @@ export class App {
               let filterSet: boolean = value === "" ? false : true;
               DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
-                value === "Active Events" || value === "" ? DataSource.ActiveEvents : (value === "All Events" ? DataSource.Events : DataSource.InActiveEvents)
+                value === "Inactive Events" ? DataSource.InactiveEvents : (value === "All Events" ? DataSource.Events : DataSource.ActiveEvents)
               );
             },
           },
@@ -89,13 +101,30 @@ export class App {
               let filterSet: boolean = value === "" ? false : true;
               DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
-                value === "Active Recurring Events" ? DataSource.ActiveReccurentEvents : (value === "All Recurring Events" ? DataSource.ReccurentEvents : DataSource.InactiveReccurentEvents)
+                value === "Inactive Recurring Events" ? DataSource.InactiveReccurentEvents : (value === "All Recurring Events" ? DataSource.ReccurentEvents : DataSource.ActiveReccurentEvents)
               );
             },
           },
         ],
       },
       navigation: {
+        title: "ERA",
+        onRendered: (el) => {
+          
+          // Update classes for the navBar container
+          let navEl = el.firstChild as HTMLElement;
+
+          // Add a logo to the navbar brand
+          let navBrand = navEl.querySelector(".navbar-brand") as HTMLAnchorElement;
+          navBrand.classList.add("d-flex");
+          navBrand.classList.add("me-2");
+          let brandText = navBrand.innerText;
+          let div = document.createElement("div");
+          div.classList.add("me-2");
+          div.appendChild(Icons.SetLogo(48, 78));
+          navBrand.innerHTML = div.outerHTML;
+          navBrand.append(brandText);
+        }, 
         items: admin.generateNavItems(() => { this.refresh(); }),
       },
       footer: {
@@ -253,73 +282,6 @@ export class App {
             },
           },
           {
-<<<<<<< HEAD
-=======
-            // 2 - Description
-            name: "",
-            title: "Recurrence",
-            onRenderCell: (el, column, item: IEventItem) => {
-              // Render a badge
-              if (item.RecurrenceSetting === "Daily") {
-                // Set the element to the Recurrence Setting
-                el.innerHTML = item.RecurrenceSetting;
-                
-                // Update the style
-                el.style.fontWeight = "bold";
-
-                // Add a break after title
-                let elBreak = document.createElement("br");
-                el.appendChild(elBreak);
-                Components.Badge({
-                  el,
-                  content: item.RecurrencePeriod + " DAYS",
-                  isPill: true,
-                  type: Components.BadgeTypes.Primary
-                });
-              } else if (item.RecurrenceSetting === "Weekly") {
-                // Set the element to the Recurrence Setting
-                el.innerHTML = item.RecurrenceSetting;
-
-                // Update the style
-                el.style.fontWeight = "bold";
-
-                // Add a break after title
-                let elBreak = document.createElement("br");
-                el.appendChild(elBreak);
-                Components.Badge({
-                  el,
-                  content: item.RecurrencePeriod + " WEEKS",
-                  isPill: true,
-                  type: Components.BadgeTypes.Primary
-                });
-              } else if (item.RecurrenceSetting === "Monthly") {
-                // Set the element to the Recurrence Setting
-                el.innerHTML = item.RecurrenceSetting;
-                // Update the style
-                el.style.fontWeight = "bold";
-
-                // Add a break after title
-                let elBreak = document.createElement("br");
-                el.appendChild(elBreak);
-                Components.Badge({
-                  el,
-                  content: item.RecurrencePeriod + " MONTHLY",
-                  isPill: true,
-                  type: Components.BadgeTypes.Primary
-                });
-              }
-              else {
-                Components.Badge({
-                  el,
-                  content: "NONE",
-                  isPill: true,
-                  type: Components.BadgeTypes.Danger
-                });
-              }
-            }
-          },
-          {
->>>>>>> 7950eac406de52c5b98bcc39100890ccb1e077d5
             // 3 - Start Date
             name: "StartDate",
             title: "Start Date",

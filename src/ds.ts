@@ -76,7 +76,7 @@ export class DataSource {
         })
         return activeEvents;
     }
-    static get InActiveEvents(): IEventItem[] {
+    static get InactiveEvents(): IEventItem[] {
         let inActiveEvents: IEventItem[] = [];
         let today = moment();
         this._events.forEach((event) => {
@@ -216,7 +216,7 @@ export class DataSource {
     static get StatusFilters(): Components.ICheckboxGroupItem[] { 
         let items: Components.ICheckboxGroupItem[] = [];
 
-        let values: string[] = ["Active Events", "Inactive Events", "All Events"];
+        let values: string[] = ["Inactive Events", "All Events"];
 
         for(let i = 0; i < values.length; i++) {
             let value = values[i];
@@ -233,7 +233,7 @@ export class DataSource {
     static get RecurrenceFilters(): Components.ICheckboxGroupItem[] { 
         let items: Components.ICheckboxGroupItem[] = [];
 
-        let values: string[] = ["Active Recurring Events", "Inactive Recurring Events", "All Recurring Events"];
+        let values: string[] = ["Inactive Recurring Events", "All Recurring Events"];
 
         for(let i = 0; i < values.length; i++) {
             let value = values[i];
@@ -327,7 +327,7 @@ export class DataSource {
     static get ManagersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._managerId; }
     private static _memberId: number = null;
     static get MembersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._memberId; }
-    static get ListUrl(): string { return ContextInfo.webServerRelativeUrl + "Lists/Events/AllItems.aspx" }   
+    static get ListUrl(): string { return ContextInfo.webServerRelativeUrl + "Lists/Events/AllItems.aspx" }
     static loadSecurityGroupUrls(): PromiseLike<void> {
         return new Promise((resolve) => {
             let web = Web();
