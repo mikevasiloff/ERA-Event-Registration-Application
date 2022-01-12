@@ -228,12 +228,12 @@ export class Registration {
             // Get the user email
             Registration.getUserEmail(userId).then(userEmail => {
                 // Set the body of the email
-                let body = `${ContextInfo.userDisplayName}, you have ${userIsRegistering ? "successfully registered for" : (userIsWaitlisted ? "successfully been added from the waitlist for" : "been removed from")} the following event:
-                    <p><strong>Title:</strong>${event.Title}</p></br>
-                    <p><strong>Description:</strong>${event.Description}</p></br>
-                    <p><strong>Start Date:</strong>${moment(event.StartDate).format("MM-DD-YYYY HH:mm")}</p></br>
-                    <p><strong>End Date:</strong>${moment(event.EndDate).format("MM-DD-YYYY HH:mm")}</p></br>
-                    <p><strong>Location:</strong>${event.Location}`;
+                let body = `${ContextInfo.userDisplayName}, you have ${userIsRegistering ? "successfully registered for" : (userIsWaitlisted ? "successfully been added from the waitlist for" : "been removed from")} the following event:</br>
+                    <p><strong>Title: </strong></p><p>${event.Title}</p></br>
+                    <p><strong>Description: </strong></p><p>${event.Description}</p></br>
+                    <p><strong>Start Date: </strong></p><p>${moment(event.StartDate).format("MM-DD-YYYY HH:mm A")}</p></br>
+                    <p><strong>End Date: </strong></p><p>${moment(event.EndDate).format("MM-DD-YYYY HH:mm A")}</p></br>
+                    <p><strong>Location: </strong></p><p>${event.Location}</p></br>`;
 
                 // Set the subject
                 let subject = `Successfully ${userId > 0 ? "added from the waitlist" : "registered"} for the event: ${event.Title}`;

@@ -65,6 +65,11 @@ export class App {
       useModal: true,
       // hideFilter: !this._isAdmin ? true : false,
       filters: {
+        onClear: () => {
+          this._dashboard.refresh(
+            DataSource.ActiveEvents
+          );
+        },
         items: [
           {
             header: "Event Status",
@@ -73,14 +78,25 @@ export class App {
               let filterSet: boolean = value === "" ? false : true;
               DataSource.SetFilter(filterSet);
               this._dashboard.refresh(
-                value === "" ? DataSource.ActiveEvents : DataSource.Events
+                value === "Active Events" || value === "" ? DataSource.ActiveEvents : (value === "All Events" ? DataSource.Events : DataSource.InActiveEvents)
+              );
+            },
+          },
+          {
+            header: "Recurring Events",
+            items: DataSource.RecurrenceFilters,
+            onFilter: (value: string) => {
+              let filterSet: boolean = value === "" ? false : true;
+              DataSource.SetFilter(filterSet);
+              this._dashboard.refresh(
+                value === "Active Recurring Events" ? DataSource.ActiveReccurentEvents : (value === "All Recurring Events" ? DataSource.ReccurentEvents : DataSource.InactiveReccurentEvents)
               );
             },
           },
         ],
       },
       navigation: {
-        items: admin.generateNavItems( () => { this.refresh(); } ),
+        items: admin.generateNavItems(() => { this.refresh(); }),
       },
       footer: {
         itemsEnd: [
@@ -190,14 +206,6 @@ export class App {
             },
           },
           {
-            name: " ",
-            title: " ",
-            onRenderCell: (el) => {
-              let selectToDelete: Components.ICheckboxGroupItem[];
-              el: selectToDelete;
-            }
-          },
-          {
             // 1 - Title
             name: "Title",
             title: "Title",
@@ -210,7 +218,6 @@ export class App {
               let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
               let startReset = startDate.set({ hour: time.get('hour'), minute: time.get('minute') });
               let dateDiff = moment(startReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
-              console.log("dateDiff: " + moment(currReset).format("DD MMM YYYY hh:mm a") + " - " + moment(startReset).format("DD MMM YYYY hh:mm a") + " = " + dateDiff);
 
               // See if this event is cancelled
               if (item.IsCancelled) {
@@ -246,6 +253,73 @@ export class App {
             },
           },
           {
+<<<<<<< HEAD
+=======
+            // 2 - Description
+            name: "",
+            title: "Recurrence",
+            onRenderCell: (el, column, item: IEventItem) => {
+              // Render a badge
+              if (item.RecurrenceSetting === "Daily") {
+                // Set the element to the Recurrence Setting
+                el.innerHTML = item.RecurrenceSetting;
+                
+                // Update the style
+                el.style.fontWeight = "bold";
+
+                // Add a break after title
+                let elBreak = document.createElement("br");
+                el.appendChild(elBreak);
+                Components.Badge({
+                  el,
+                  content: item.RecurrencePeriod + " DAYS",
+                  isPill: true,
+                  type: Components.BadgeTypes.Primary
+                });
+              } else if (item.RecurrenceSetting === "Weekly") {
+                // Set the element to the Recurrence Setting
+                el.innerHTML = item.RecurrenceSetting;
+
+                // Update the style
+                el.style.fontWeight = "bold";
+
+                // Add a break after title
+                let elBreak = document.createElement("br");
+                el.appendChild(elBreak);
+                Components.Badge({
+                  el,
+                  content: item.RecurrencePeriod + " WEEKS",
+                  isPill: true,
+                  type: Components.BadgeTypes.Primary
+                });
+              } else if (item.RecurrenceSetting === "Monthly") {
+                // Set the element to the Recurrence Setting
+                el.innerHTML = item.RecurrenceSetting;
+                // Update the style
+                el.style.fontWeight = "bold";
+
+                // Add a break after title
+                let elBreak = document.createElement("br");
+                el.appendChild(elBreak);
+                Components.Badge({
+                  el,
+                  content: item.RecurrencePeriod + " MONTHLY",
+                  isPill: true,
+                  type: Components.BadgeTypes.Primary
+                });
+              }
+              else {
+                Components.Badge({
+                  el,
+                  content: "NONE",
+                  isPill: true,
+                  type: Components.BadgeTypes.Danger
+                });
+              }
+            }
+          },
+          {
+>>>>>>> 7950eac406de52c5b98bcc39100890ccb1e077d5
             // 3 - Start Date
             name: "StartDate",
             title: "Start Date",

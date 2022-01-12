@@ -39,6 +39,14 @@ export const Configuration = Helper.SPConfig({
                     showInNewForm: true,
                 } as Helper.IFieldInfoDate,
                 {
+                    name: "POC",
+                    title: "POC",
+                    type: Helper.SPCfgFieldType.User,
+                    multi: true,
+                    required: true,
+                    selectionMode: SPTypes.FieldUserSelectionType.PeopleOnly
+                } as Helper.IFieldInfoUser,
+                {
                     name: "Location",
                     title: "Location",
                     type: Helper.SPCfgFieldType.Text,
@@ -74,13 +82,6 @@ export const Configuration = Helper.SPConfig({
                     showInNewForm: false,
                 } as Helper.IFieldInfoUser,
                 {
-                    name: "POC",
-                    title: "POC",
-                    type: Helper.SPCfgFieldType.User,
-                    multi: true,
-                    selectionMode: SPTypes.FieldUserSelectionType.PeopleOnly
-                } as Helper.IFieldInfoUser,
-                {
                     name: "RegisteredUsers",
                     title: "Registered Users",
                     type: Helper.SPCfgFieldType.User,
@@ -99,34 +100,28 @@ export const Configuration = Helper.SPConfig({
                 },
                 {
                     name: "RecurrenceSetting",
-                    title: "Recurring Event?",
+                    title: "Recurring Event",
                     type: Helper.SPCfgFieldType.Choice,
                     choices: [
-                        "Not Recurring",
+                        "No",
                         "Daily",
                         "Weekly",
                         "Monthly",
                     ],
-                    defaultValue: "Not Recurring",
-                    showInViewForms: false,
-                    showInEditForm: false,
-                    showInNewForm: true,
+                    defaultValue: "No",
                 } as Helper.IFieldInfoChoice,
                 {
                     name: "RecurrencePeriod",
                     title: "Recurrence Period",
                     type: Helper.SPCfgFieldType.Number,
                     defaultValue: "0",
-                    showInViewForms: false,
-                    showInEditForm: false,
-                    showInNewForm: true,
                 } as Helper.IFieldInfoNumber
             ],
             ViewInformation: [
                 {
                     ViewName: "All Items",
                     ViewFields: [
-                        "LinkTitle", "StartDate", "EndDate", "Location", "POC", "Capacity", "OpenSpots", "RegisteredUsers", "WaitListedUsers", "RecurrenceSetting", "RecurrencePeriod"
+                        "LinkTitle", "StartDate", "EndDate",  "POC", "Location", "Capacity", "OpenSpots", "RegisteredUsers", "WaitListedUsers", "RecurrenceSetting", "RecurrencePeriod"
                     ]
                 }
             ]

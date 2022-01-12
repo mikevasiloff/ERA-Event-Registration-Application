@@ -76,6 +76,49 @@ export class DataSource {
         })
         return activeEvents;
     }
+    static get InActiveEvents(): IEventItem[] {
+        let inActiveEvents: IEventItem[] = [];
+        let today = moment();
+        this._events.forEach((event) => {
+            let startDate = event.StartDate;
+            if (moment(startDate).isBefore(today) || moment(startDate) === today) {
+                inActiveEvents.push(event);
+            }
+        })
+        return inActiveEvents;
+    }
+    static get ReccurentEvents(): IEventItem[] {
+        let recurrentEvents: IEventItem[] = [];
+        this._events.forEach((event) => {
+            if (event.RecurrenceSetting != "No") {
+                recurrentEvents.push(event);
+            }
+        })
+        return recurrentEvents;
+    }
+    static get ActiveReccurentEvents(): IEventItem[] {
+        let recurrentEvents: IEventItem[] = [];
+        let today = moment();
+        this._events.forEach((event) => {
+            let startDate = event.StartDate;
+            let endDate = event.EndDate;
+            if (moment(endDate).isAfter(today) && event.RecurrenceSetting != "No") {
+                recurrentEvents.push(event);
+            }
+        })
+        return recurrentEvents;
+    }
+    static get InactiveReccurentEvents(): IEventItem[] {
+        let recurrentEvents: IEventItem[] = [];
+        let today = moment();
+        this._events.forEach((event) => {
+            let endDate = event.EndDate;
+            if (moment(endDate).isBefore(today) && event.RecurrenceSetting != "No") {
+                recurrentEvents.push(event);
+            }
+        })
+        return recurrentEvents;
+    }
 
     static loadEvents(): PromiseLike<void> {
         // Return a promise
@@ -170,13 +213,40 @@ export class DataSource {
         });
     }
 
-    // Status Filters
-    private static _statusFilters: Components.ICheckboxGroupItem[] = [{
-        label: "Show all active and inactive events",
-        type: Components.CheckboxGroupTypes.Switch,
-        isSelected: false
-    }];
-    static get StatusFilters(): Components.ICheckboxGroupItem[] { return this._statusFilters; }
+    static get StatusFilters(): Components.ICheckboxGroupItem[] { 
+        let items: Components.ICheckboxGroupItem[] = [];
+
+        let values: string[] = ["Active Events", "Inactive Events", "All Events"];
+
+        for(let i = 0; i < values.length; i++) {
+            let value = values[i];
+
+            items.push({
+                label: value,
+                type: Components.CheckboxGroupTypes.Switch,
+                isSelected: value === "Active Events" ? true : false
+            });
+        }   
+
+        return items;
+    }
+    static get RecurrenceFilters(): Components.ICheckboxGroupItem[] { 
+        let items: Components.ICheckboxGroupItem[] = [];
+
+        let values: string[] = ["Active Recurring Events", "Inactive Recurring Events", "All Recurring Events"];
+
+        for(let i = 0; i < values.length; i++) {
+            let value = values[i];
+
+            items.push({
+                label: value,
+                type: Components.CheckboxGroupTypes.Switch,
+                isSelected: value === "Active Recurring Events" ? true : false
+            });
+        }   
+
+        return items;
+    }
 
     // User Login Name
     private static _userLoginName = null;
