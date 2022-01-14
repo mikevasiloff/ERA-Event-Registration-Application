@@ -7,7 +7,6 @@ import { Admin } from "./admin";
 import { Calendar } from "./calendar";
 import { DocumentsView } from "./documents"
 import { DataSource, IEventItem } from "./ds";
-import { Icons } from "./icon"
 import { Member } from "./member";
 import { Registration } from "./registration";
 import Strings from "./strings";
@@ -67,8 +66,9 @@ export class App {
       // hideFilter: !this._isAdmin ? true : false,
       hideHeader: false,
       header: {
-        title: DataSource.Configuration.headerTitle || Strings.ProjectName,
+        // title: DataSource.Configuration.headerTitle || Strings.ProjectName,
         onRendered: (el) => {
+          
           // See if the image url is defined
           if (DataSource.Configuration.headerImage) {
             // Update the header
@@ -108,23 +108,6 @@ export class App {
         ],
       },
       navigation: {
-        title: "ERA",
-        onRendered: (el) => {
-          
-          // Update classes for the navBar container
-          let navEl = el.firstChild as HTMLElement;
-
-          // Add a logo to the navbar brand
-          let navBrand = navEl.querySelector(".navbar-brand") as HTMLAnchorElement;
-          navBrand.classList.add("d-flex");
-          navBrand.classList.add("me-2");
-          let brandText = navBrand.innerText;
-          let div = document.createElement("div");
-          div.classList.add("me-2");
-          div.appendChild(Icons.SetLogo(48, 78));
-          navBrand.innerHTML = div.outerHTML;
-          navBrand.append(brandText);
-        }, 
         items: admin.generateNavItems(() => { this.refresh(); }),
       },
       footer: {

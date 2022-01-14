@@ -7,16 +7,12 @@ import * as moment from "moment";
 import { Configuration } from "./cfg";
 import { DataSource, IEventItem } from "./ds";
 import { EventForms } from "./eventForms";
-import { Icons } from "./icon"
 import { Registration } from "./registration";
 
 export class Admin {
   // Generates the navigation items
   generateNavItems(onRefresh: () => void): Components.INavbarItem[] {
     let navItems: Components.INavbarItem[] = [];
-
-   
-    
 
     // See if this is the admin
     if (DataSource.IsAdmin) {

@@ -27,6 +27,7 @@ const Strings = {
     EventRegConfig: ContextInfo.webServerRelativeUrl + "/SiteAssets/Event-Registration/eventreg-config.json",
     SourceUrl: ContextInfo.webServerRelativeUrl + "/SiteAssets/Event-Registration/",
     SolutionUrl: ContextInfo.webServerRelativeUrl + "/sites/dev/SiteAssets/Event-Registration/index.html",
+    background: "https://usaf.dps.mil/sites/AFGSC-HQ/hq/ds/dsk/josh/EventReg2/SiteAssets/era.png",
     Version: "2.0",
 };
 export default Strings;

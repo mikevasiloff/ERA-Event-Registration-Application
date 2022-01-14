@@ -20,12 +20,15 @@
 }
 
 .bs #header {
-    background-color: #000;
+    background-color: rgba(0,0,0,0.05);
+    border-top: .15rem solid gray;
+    border-bottom: .1rem solid gray;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
     color: #fff;
     margin-bottom: 0px;
+    height: 12rem;
 }
 
 .bs .navbar > .container, .bs .navbar > .container-fluid, .bs .navbar > .container-sm, .bs .navbar > .container-md, .bs .navbar > .container-lg, .bs .navbar > .container-xl, .bs .navbar > .container-xxl {
@@ -34,10 +37,6 @@
     align-items: center;
     justify-content: space-between;
     background: url(../assets/era.png) no-repeat 50% 50%;
-}
-
-.navbar-brand {
-    cursor: none;
 }
 
 .align-middle {
