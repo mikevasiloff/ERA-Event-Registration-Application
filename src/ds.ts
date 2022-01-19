@@ -38,8 +38,6 @@ export interface IEventItem extends Types.SP.ListItemOData {
         }[]
     };
     WaitListedUsersId: { results: number[] };
-    RecurrenceSetting: string;
-    RecurrencePeriod: number;
 }
 
 // Configuration
@@ -67,57 +65,47 @@ export class DataSource {
     static get Events(): IEventItem[] { return this._events; }
     static get ActiveEvents(): IEventItem[] {
         let activeEvents: IEventItem[] = [];
-        let today = moment();
         this._events.forEach((event) => {
             let startDate = event.StartDate;
-            if (moment(startDate).isAfter(today)) {
+                              
+            // Determine the # of hours until the event starts
+            let currDate = moment();
+            let begDate = moment(startDate);
+            let resetHour = '12:00:00 am';
+            let time = moment(resetHour, 'HH:mm:ss a');
+            let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+            let begReset = begDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+            let dateDiff = moment(begReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
+            let dateDiffDays = moment(begReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "days");
+
+            // Determine if the # of hours until the event starts is within 1 day or if it is within 24 hours of current time
+            if (dateDiff > 24 || (dateDiff <= 24 && dateDiff > 0)) {
                 activeEvents.push(event);
             }
         })
         return activeEvents;
     }
     static get InactiveEvents(): IEventItem[] {
-        let inActiveEvents: IEventItem[] = [];
-        let today = moment();
+        let inactiveEvents: IEventItem[] = [];
         this._events.forEach((event) => {
             let startDate = event.StartDate;
-            if (moment(startDate).isBefore(today) || moment(startDate) === today) {
-                inActiveEvents.push(event);
+
+                        
+            // Determine the # of hours until the event starts
+            let currDate = moment();
+            let begDate = moment(startDate);
+            let resetHour = '12:00:00 am';
+            let time = moment(resetHour, 'HH:mm:ss a');
+            let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+            let begReset = begDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+            let dateDiff = moment(begReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
+
+            // Determine if the Event takes place before 24 hours before the start date
+            if (dateDiff <= 24 && dateDiff <= 0) {
+                inactiveEvents.push(event);
             }
         })
-        return inActiveEvents;
-    }
-    static get ReccurentEvents(): IEventItem[] {
-        let recurrentEvents: IEventItem[] = [];
-        this._events.forEach((event) => {
-            if (event.RecurrenceSetting != "No") {
-                recurrentEvents.push(event);
-            }
-        })
-        return recurrentEvents;
-    }
-    static get ActiveReccurentEvents(): IEventItem[] {
-        let recurrentEvents: IEventItem[] = [];
-        let today = moment();
-        this._events.forEach((event) => {
-            let startDate = event.StartDate;
-            let endDate = event.EndDate;
-            if (moment(endDate).isAfter(today) && event.RecurrenceSetting != "No") {
-                recurrentEvents.push(event);
-            }
-        })
-        return recurrentEvents;
-    }
-    static get InactiveReccurentEvents(): IEventItem[] {
-        let recurrentEvents: IEventItem[] = [];
-        let today = moment();
-        this._events.forEach((event) => {
-            let endDate = event.EndDate;
-            if (moment(endDate).isBefore(today) && event.RecurrenceSetting != "No") {
-                recurrentEvents.push(event);
-            }
-        })
-        return recurrentEvents;
+        return inactiveEvents;
     }
 
     static loadEvents(): PromiseLike<void> {
@@ -137,7 +125,6 @@ export class DataSource {
                         "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
                         "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
                         "Editor/Id", "Editor/Title",
-                        "RecurrenceSetting", "RecurrencePeriod",
                     ]
                 }).execute(
                     // Success
@@ -225,23 +212,6 @@ export class DataSource {
                 label: value,
                 type: Components.CheckboxGroupTypes.Switch,
                 isSelected: value === "Active Events" ? true : false
-            });
-        }   
-
-        return items;
-    }
-    static get RecurrenceFilters(): Components.ICheckboxGroupItem[] { 
-        let items: Components.ICheckboxGroupItem[] = [];
-
-        let values: string[] = ["Inactive Recurring Events", "All Recurring Events"];
-
-        for(let i = 0; i < values.length; i++) {
-            let value = values[i];
-
-            items.push({
-                label: value,
-                type: Components.CheckboxGroupTypes.Switch,
-                isSelected: value === "Active Recurring Events" ? true : false
             });
         }   
 

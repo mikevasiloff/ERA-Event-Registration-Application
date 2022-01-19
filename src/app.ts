@@ -93,18 +93,7 @@ export class App {
                 value === "Inactive Events" ? DataSource.InactiveEvents : (value === "All Events" ? DataSource.Events : DataSource.ActiveEvents)
               );
             },
-          },
-          {
-            header: "Recurring Events",
-            items: DataSource.RecurrenceFilters,
-            onFilter: (value: string) => {
-              let filterSet: boolean = value === "" ? false : true;
-              DataSource.SetFilter(filterSet);
-              this._dashboard.refresh(
-                value === "Inactive Recurring Events" ? DataSource.InactiveReccurentEvents : (value === "All Recurring Events" ? DataSource.ReccurentEvents : DataSource.ActiveReccurentEvents)
-              );
-            },
-          },
+          }
         ],
       },
       navigation: {

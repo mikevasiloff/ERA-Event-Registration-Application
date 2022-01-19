@@ -97,31 +97,13 @@ export const Configuration = Helper.SPConfig({
                     type: Helper.SPCfgFieldType.Boolean,
                     showInEditForm: false,
                     showInNewForm: false,
-                },
-                {
-                    name: "RecurrenceSetting",
-                    title: "Recurring Event",
-                    type: Helper.SPCfgFieldType.Choice,
-                    choices: [
-                        "No",
-                        "Daily",
-                        "Weekly",
-                        "Monthly",
-                    ],
-                    defaultValue: "No",
-                } as Helper.IFieldInfoChoice,
-                {
-                    name: "RecurrencePeriod",
-                    title: "Recurrence Period",
-                    type: Helper.SPCfgFieldType.Number,
-                    defaultValue: "0",
-                } as Helper.IFieldInfoNumber
+                }
             ],
             ViewInformation: [
                 {
                     ViewName: "All Items",
                     ViewFields: [
-                        "LinkTitle", "StartDate", "EndDate",  "POC", "Location", "Capacity", "OpenSpots", "RegisteredUsers", "WaitListedUsers", "RecurrenceSetting", "RecurrencePeriod"
+                        "LinkTitle", "StartDate", "EndDate",  "POC", "Location", "Capacity", "OpenSpots", "RegisteredUsers", "WaitListedUsers"
                     ]
                 }
             ]

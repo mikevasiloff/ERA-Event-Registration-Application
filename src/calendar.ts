@@ -26,24 +26,6 @@ export class Calendar {
     let dtEnd: String = "";
     let recurrentRule: String = ``;
 
-    // Set ICS file based on if it is recurring
-    if (item.RecurrenceSetting === "No") {
-      dtStart = moment(item.StartDate).toDate().toISOString();
-      dtEnd = moment(item.EndDate).toDate().toISOString();
-    } else if (item.RecurrenceSetting === "Daily") {
-      dtStart = moment(item.StartDate).toDate().toISOString();
-      dtEnd = moment(item.EndDate).add(item.RecurrencePeriod, 'days').subtract(1, 'day').toISOString();
-      recurrentRule = `RRULE:FREQ=DAILY;UNTIL=${dtEnd}`;
-    } else if (item.RecurrenceSetting === "Weekly") {
-      dtStart = moment(item.StartDate).toDate().toISOString();
-      dtEnd = moment(item.EndDate).add(item.RecurrencePeriod, 'week').subtract(1, 'day').toISOString();
-      recurrentRule = `RRULE:FREQ=WEEKLY;UNTIL=${dtEnd}`;
-    } else if (item.RecurrenceSetting === "Monthly") {
-      dtStart = moment(item.StartDate).toDate().toISOString();
-      dtEnd = moment(item.EndDate).add(item.RecurrencePeriod, 'month').subtract(1, 'day').toISOString();
-      recurrentRule = `RRULE:FREQ=MONTHLY;UNTIL=${dtEnd}`;
-    }
-
     // Create the ICS data
     let icsData = `BEGIN:VCALENDAR
 CALSCALE:GREGORIAN
