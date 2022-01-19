@@ -2,7 +2,7 @@ import { InstallationRequired, LoadingDialog, Modal } from "dattatable";
 import { Components, Helper, Utility } from "gd-sprest-bs";
 import { calendarPlus } from "gd-sprest-bs/build/icons/svgs/calendarPlus";
 import { gearWideConnected } from "gd-sprest-bs/build/icons/svgs/gearWideConnected";
-import { sliders } from "gd-sprest-bs/build/icons/svgs/sliders";  
+import { sliders } from "gd-sprest-bs/build/icons/svgs/sliders";
 import * as moment from "moment";
 import { Configuration } from "./cfg";
 import { DataSource, IEventItem } from "./ds";
@@ -412,6 +412,23 @@ export class Admin {
 
   // Renders the event menu
   renderEventMenu(el: HTMLElement, eventItem: IEventItem, onRefresh: () => void) {
+    // Determine if the event is active
+    let startDate = eventItem.StartDate;
+    let isActive = true;
+
+    // Determine the # of hours until the event starts
+    let currDate = moment();
+    let begDate = moment(startDate);
+    let resetHour = '12:00:00 am';
+    let time = moment(resetHour, 'HH:mm:ss a');
+    let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+    let begReset = begDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+    let dateDiff = moment(begReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
+
+    if (dateDiff <= 24 && dateDiff <= 0) {
+      isActive = false;
+    }
+
     // Add the admin dropdown
     let adminDropdown = Components.Dropdown({
       el: el,
@@ -433,8 +450,13 @@ export class Admin {
         },
         {
           text: " Edit",
+          isDisabled: isActive ? false : true,
           onClick: (button) => {
-            EventForms.edit(eventItem, onRefresh);
+            if (isActive === true) {
+              EventForms.edit(eventItem, onRefresh);
+            } else {
+              return;
+            }
           },
         },
         {

@@ -89,8 +89,7 @@ export class DataSource {
         let inactiveEvents: IEventItem[] = [];
         this._events.forEach((event) => {
             let startDate = event.StartDate;
-
-                        
+         
             // Determine the # of hours until the event starts
             let currDate = moment();
             let begDate = moment(startDate);
