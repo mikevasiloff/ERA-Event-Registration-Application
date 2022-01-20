@@ -63,16 +63,15 @@ export class App {
     this._dashboard = new Dashboard({
       el: this._el,
       useModal: true,
-      // hideFilter: !this._isAdmin ? true : false,
-      hideHeader: false,
+      hideHeader: DataSource.Configuration.hideHeader,
       header: {
-        // title: DataSource.Configuration.headerTitle || Strings.ProjectName,
-        onRendered: (el) => {
-          
+        onRendered: (el) => {  
           // See if the image url is defined
-          if (DataSource.Configuration.headerImage) {
+          if (DataSource.Configuration.headerImage && !DataSource.Configuration.hideImage) {
             // Update the header
             el.style.backgroundImage = "url(" + DataSource.Configuration.headerImage + ")";
+          } else if (!DataSource.Configuration.headerImage && !DataSource.Configuration.hideImage) {
+            el.style.backgroundImage = "url(./era.png)";
           }
         }
       },
@@ -402,6 +401,7 @@ export class App {
             name: "",
             title: "",
             onRenderCell: (el, column, item: IEventItem) => {
+              if (DataSource.Configuration.hideAddToCalendarColumn) { return; }
               new Calendar(el, item, this._isAdmin);
             }
           }

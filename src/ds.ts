@@ -47,6 +47,7 @@ export interface IConfiguration {
     headerTitle?: string;
     hideAddToCalendarColumn?: boolean;
     hideHeader?: boolean;
+    hideImage?: boolean;
     membersGroupName?: string;
 }
 /**
