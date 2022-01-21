@@ -77,7 +77,6 @@ export class DataSource {
             let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
             let begReset = begDate.set({ hour: time.get('hour'), minute: time.get('minute') });
             let dateDiff = moment(begReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
-            let dateDiffDays = moment(begReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "days");
 
             // Determine if the # of hours until the event starts is within 1 day or if it is within 24 hours of current time
             if (dateDiff > 24 || (dateDiff <= 24 && dateDiff > 0)) {

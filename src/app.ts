@@ -378,7 +378,16 @@ export class App {
             name: "",
             title: " Registration",
             onRenderCell: (el, column, item: IEventItem) => {
-              if (item.IsCancelled) { return; }
+               // Determine the # of hours until the event starts
+               let currDate = moment();
+               let startDate = moment(item["StartDate"]);
+               let resetHour = '12:00:00 am';
+               let time = moment(resetHour, 'HH:mm:ss a');
+               let currReset = currDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+               let startReset = startDate.set({ hour: time.get('hour'), minute: time.get('minute') });
+               let dateDiff = moment(startReset, "DD/MM/YYYY").diff(moment(currReset, "DD/MM/YYYY"), "hours");
+
+              if (item.IsCancelled || (dateDiff <= 24 && dateDiff <= 0)) { return; }
               new Registration(el, item, () => { this.refresh(); });
             },
           },
