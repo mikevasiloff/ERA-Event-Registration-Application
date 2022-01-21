@@ -438,14 +438,22 @@ export class Admin {
           text: " Register User",
           isDisabled: eventItem.IsCancelled || Registration.isFull(eventItem),
           onClick: (button) => {
-            this.registerUser(eventItem, onRefresh);
+            if (eventItem.IsCancelled || Registration.isFull(eventItem)) {
+              return;
+            } else {
+              this.registerUser(eventItem, onRefresh);
+            }
           },
         },
         {
           text: " Unregister User",
           isDisabled: eventItem.IsCancelled || Registration.isEmpty(eventItem),
           onClick: (button) => {
-            this.unregisterUser(eventItem, onRefresh);
+            if (eventItem.IsCancelled || Registration.isEmpty(eventItem)) {
+              return;
+            } else {
+              this.unregisterUser(eventItem, onRefresh);
+            }
           },
         },
         {
@@ -461,8 +469,13 @@ export class Admin {
         },
         {
           text: " Delete",
+          isDisabled: isActive ? false : true,
           onClick: (button) => {
-            EventForms.delete(eventItem, onRefresh);
+            if (isActive === true) {
+              EventForms.delete(eventItem, onRefresh);
+            } else {
+              return;
+            }
           },
         },
         {

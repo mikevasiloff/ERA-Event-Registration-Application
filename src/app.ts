@@ -394,14 +394,15 @@ export class App {
           {
             // 11 - User/Admin Options
             name: "",
-            title: this._isAdmin ? "Manage Event" : "Event Options",
+            title: this._isAdmin ? "Manage Event" : " ",
             onRenderCell: (el, column, item: IEventItem) => {
               if (this._isAdmin) {
                 // Render the admin menu
                 admin.renderEventMenu(el, item, () => { this.refresh(); });
               } else {
                 // Render the user menu
-                member.renderEventMenu(el, item);
+                // member.renderEventMenu(el, item);
+                return;
               }
             },
           },
