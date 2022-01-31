@@ -124,11 +124,11 @@ export class Admin {
             return results;
           }
         } as Components.IFormControlPropsMultiCheckbox,
-        {
-          name: "SendEmail",
-          label: "Send Email?",
-          type: Components.FormControlTypes.Switch
-        }
+        // {
+        //   name: "SendEmail",
+        //   label: "Send Email?",
+        //   type: Components.FormControlTypes.Switch
+        // }
       ]
     });
 
@@ -173,6 +173,7 @@ export class Admin {
               // Refresh the dashboard
               onRefresh();
 
+              console.log("sendEmail: " + sendEmail);
               // See if we are sending an email
               if (sendEmail) {
                 // Parse the users to delete
@@ -190,91 +191,11 @@ export class Admin {
                     LoadingDialog.hide();
                   });
                 });
-              } else {
-
-              }
+              } 
 
               // Close the dialog
               LoadingDialog.hide();
             });
-          }
-        },
-        {
-          text: "Register",
-          type: Components.ButtonTypes.Primary,
-          onClick: () => {
-            // Ensure the form is valid
-            if (form.isValid()) {
-              let formValues = form.getValues();
-              let sendEmail = formValues["SendEmail"];
-
-              // Close the modal
-              Modal.hide();
-
-              // Show a loading dialog
-              LoadingDialog.setHeader("Registering User(s)");
-              LoadingDialog.setBody("This dialog will close after the user(s) are registered.");
-              LoadingDialog.show();
-
-              // Parse the waitlisted users
-              let usersToAdd: Components.ICheckboxGroupItem[] = formValues["Users"];
-              let registeredUsers = eventItem.RegisteredUsersId ? eventItem.RegisteredUsersId.results : [];
-              let waitlistedUsers = [];
-              for (let i = 0; i < items.length; i++) {
-                let userId = items[i].data.Id;
-
-                // Parse the users to add
-                let registerUser = false;
-                for (let j = 0; j < usersToAdd.length; j++) {
-                  let user = usersToAdd[j];
-
-                  // See if this user is being registered
-                  if (user.data.Id == userId) {
-                    // Set the flag
-                    registerUser = true;
-                    break;
-                  }
-                }
-
-                // See if we are registering the user
-                if (registerUser) {
-                  // Append the registered user
-                  registeredUsers.push(userId);
-                } else {
-                  // Append the waitlisted user
-                  waitlistedUsers.push(userId);
-                }
-              }
-
-              // Update the item
-              eventItem.update({
-                "RegisteredUsersId": { results: registeredUsers },
-                "WaitListedUsersId": { results: waitlistedUsers }
-              }).execute(() => {
-                // Refresh the dashboard
-                onRefresh();
-
-                // See if we are sending an email
-                if (sendEmail) {
-                  Helper.Executor(usersToAdd, user => {
-                    // Return a promise
-                    return new Promise((resolve, reject) => {
-                      // Send an email
-                      Registration.sendMail(eventItem, user.data.Id, false, true).then(() => {
-                        // Resolve the request
-                        resolve(null);
-                      }, reject);
-                    }).then(() => {
-                      // Close the dialog
-                      LoadingDialog.hide();
-                    });
-                  });
-                } else {
-                  // Close the dialog
-                  LoadingDialog.hide();
-                }
-              });
-            }
           }
         },
         {
@@ -468,8 +389,7 @@ export class Admin {
           },
         },
         {
-          text: " Delete",
-          isDisabled: isActive ? false : true,
+          text: " Delete",          
           onClick: (button) => {
             if (isActive === true) {
               EventForms.delete(eventItem, onRefresh);

@@ -201,7 +201,6 @@ export class App {
                   });
                   document.querySelector(".modal-dialog").classList.add("modal-dialog-scrollable");
                 },
-
               });
             },
           },

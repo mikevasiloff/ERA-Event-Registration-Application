@@ -65,8 +65,12 @@ export class DocumentsView {
                                     }
                                 }
 
-                                // View the attachments
-                                this.viewAttachments();
+                                if (this._item.AttachmentFiles.results.length != 0) {
+                                    // View the attachments
+                                    this.viewAttachments();
+                                } else {
+                                    Modal.hide();
+                                }
 
                                 // Hide the loading dialog
                                 LoadingDialog.hide();
@@ -79,6 +83,9 @@ export class DocumentsView {
                                 LoadingDialog.hide();
                             }
                         )
+
+                        // Refresh the dashboard
+                        this._onRefresh();
                     }
                 },
                 {
@@ -122,13 +129,11 @@ export class DocumentsView {
                     text: "View Attachments",
                     isDisabled: this._isUploaded ? false : true,
                     onClick: () => {
-                        // See if attachments exist
-                        if (this._attachmentNumber > 0) {
+                        if (this._isUploaded) {
                             // View the attachments
                             this.viewAttachments();
-                        } else if (this._attachmentNumber == 0) {
-                            // Display no attachments method
-                            this.noAttachments();
+                        } else {
+                            return;
                         }
                     }
                 },
@@ -250,7 +255,6 @@ export class DocumentsView {
                                 }
                             });
                         }
-
                     }
                 }
             ]
