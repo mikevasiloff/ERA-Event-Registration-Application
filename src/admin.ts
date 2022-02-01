@@ -124,11 +124,11 @@ export class Admin {
             return results;
           }
         } as Components.IFormControlPropsMultiCheckbox,
-        // {
-        //   name: "SendEmail",
-        //   label: "Send Email?",
-        //   type: Components.FormControlTypes.Switch
-        // }
+        {
+          name: "SendEmail",
+          label: "Send Email?",
+          type: Components.FormControlTypes.Switch
+        }
       ]
     });
 
@@ -191,7 +191,7 @@ export class Admin {
                     LoadingDialog.hide();
                   });
                 });
-              } 
+              }
 
               // Close the dialog
               LoadingDialog.hide();
@@ -389,7 +389,7 @@ export class Admin {
           },
         },
         {
-          text: " Delete",          
+          text: " Delete",
           onClick: (button) => {
             if (isActive === true) {
               EventForms.delete(eventItem, onRefresh);
@@ -645,6 +645,7 @@ export class Admin {
               let newUsers = [];
               let usersToRemove = form.getValues()["Users"] as Components.ICheckboxGroupItem[];
               let registeredUsers = eventItem.RegisteredUsersId ? eventItem.RegisteredUsersId.results : [];
+              let userIDRM;
               for (let i = 0; i < registeredUsers.length; i++) {
                 let userId = registeredUsers[i];
 
@@ -663,6 +664,9 @@ export class Admin {
                   // Remove the user
                   newUsers.push(userId);
                 }
+
+                // Assign the local variable to a global variable
+                userIDRM = userId;
               }
 
               // Update the item
@@ -671,6 +675,16 @@ export class Admin {
               }).execute(() => {
                 // Refresh the dashboard
                 onRefresh();
+
+                // Update the loading dialog
+                LoadingDialog.setHeader("Sending Email");
+                LoadingDialog.setBody("This dialog will close after the email is sent.");
+
+                // Send an email
+                Registration.sendMail(eventItem, userIDRM, false, false).then(() => {
+                  // Close the dialog
+                  LoadingDialog.hide();
+                });
 
                 // Close the dialog
                 LoadingDialog.hide();

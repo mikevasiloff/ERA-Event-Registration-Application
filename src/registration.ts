@@ -119,6 +119,8 @@ export class Registration {
             onClick: (button) => {
                 let waitListedUserIds = this._item.WaitListedUsersId ? this._item.WaitListedUsersId.results : [];
                 let registeredUserIds = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results : [];
+                let registeredStatus = false;
+                let removeFromWaitList = false;
 
                 // See if the user is unregistered
                 let isUnregistered = btnText == "Unregister";
@@ -196,12 +198,15 @@ export class Registration {
                     };
                 }
 
+                userIsRegistering ? registeredStatus = true : registeredStatus = false;
+                (dlg == "Removing User From Waitlist") ? removeFromWaitList = true : removeFromWaitList = false;
+
                 // Update the item
                 this._item.update(updateFields).execute(
                     // Success
                     () => {
                         // Send email
-                        Registration.sendMail(this._item, userFromWaitlist, userIsRegistering, false).then(() => {
+                        Registration.sendMail(this._item, userFromWaitlist, registeredStatus, false).then(() => {
                             // Hide the dialog
                             LoadingDialog.hide();
 
@@ -223,7 +228,8 @@ export class Registration {
         // Return a promise
         return new Promise((resolve) => {
             // Do nothing if the user is unregistering from the event
-            if (!userIsRegistering) { resolve(); return; }
+            // if (!userIsRegistering) { resolve(); return; }
+            console.log("userIsWaitlisted: " + userIsWaitlisted);
 
             // Get the user email
             Registration.getUserEmail(userId).then(userEmail => {
@@ -234,9 +240,9 @@ export class Registration {
                     <p><strong>Start Date: </strong></p><p>${moment(event.StartDate).format("MM-DD-YYYY HH:mm A")}</p></br>
                     <p><strong>End Date: </strong></p><p>${moment(event.EndDate).format("MM-DD-YYYY HH:mm A")}</p></br>
                     <p><strong>Location: </strong></p><p>${event.Location}</p></br>`;
-
+                
                 // Set the subject
-                let subject = `Successfully ${userId > 0 ? "added from the waitlist" : "registered"} for the event: ${event.Title}`;
+                let subject = `Successfully ${userIsWaitlisted ? "added from the waitlist" : (userIsRegistering ? "registered" : "removed from")} for the event: ${event.Title}`;
 
                 // See if the user email exists and is registering for the event
                 if (userEmail) {
