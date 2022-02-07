@@ -5,7 +5,7 @@ import * as jQuery from "jquery";
 import * as moment from "moment";
 import { Admin } from "./admin";
 import { Calendar } from "./calendar";
-import { DocumentsView } from "./documents"
+import { DocumentsView } from "./documents";
 import { DataSource, IEventItem } from "./ds";
 import { Member } from "./member";
 import { Registration } from "./registration";

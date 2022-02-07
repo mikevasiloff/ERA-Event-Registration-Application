@@ -253,6 +253,8 @@ export class Admin {
     // Set the modal body
     Modal.setBody(form.el);
 
+Modal.setScrollable(true);
+
     // Set the modal footer
     Modal.setFooter(Components.ButtonGroup({
       buttons: [
