@@ -22,16 +22,16 @@ npm run all
  ![image](https://user-images.githubusercontent.com/84786032/156637037-fc5df5ca-4287-477b-acc1-f645db54481e.png)
 4) Navigate to Site Pages <br/>
 ![image](https://user-images.githubusercontent.com/84786032/156637651-1ab7203d-8a07-44d8-b3e4-bde401a1d6e0.png)
-5) Click New -> Web Part Page
+5) Click New -> Web Part Page <br />
 ![image](https://user-images.githubusercontent.com/84786032/156637716-1f2d6d00-df90-4a22-b683-ddc6b23b7e82.png)
 6) Type the name of the page before ".aspx" (era is recommended) and select "Full Page, Vertical" for layout template. <br/>
 ![image](https://user-images.githubusercontent.com/84786032/156637835-60b3fdaa-68e4-46bf-a3f5-cbab74d3bbc8.png)
-7) Exit out of the current tab and return to “Site Contents” -> “Site Assets”.
+7) Exit out of the current tab and return to “Site Contents” -> “Site Assets”. <br/>
 ![image](https://user-images.githubusercontent.com/84786032/156638556-293a85b5-bc4d-4b6e-b618-752e66fe7930.png)
 7)	Move the “.aspx” file created in Step 9) to the Event-Registration folder created in 
-Step 2).
+Step 2). <br/>
 ![image](https://user-images.githubusercontent.com/84786032/156638909-7bbc8522-97e0-432f-b7dd-3b89768060af.png)
-8) Click the “.aspx” file, then click the Page tab on the ribbon above and then the Edit Page button.
+8) Click the “.aspx” file, then click the Page tab on the ribbon above and then the Edit Page button. <br/>
 ![image](https://user-images.githubusercontent.com/84786032/156639155-c1402971-15ae-4553-9c94-3f698dcd3234.png)
 9) Click "Add a Web Part" and set Categories to "Media and Content" and Parts to "Content Editor". Click "Add". <br/>
 ![image](https://user-images.githubusercontent.com/84786032/135382433-71365861-3324-4092-ba33-b8ab077bb93f.png)
@@ -46,9 +46,9 @@ Step 2).
 ![image](https://user-images.githubusercontent.com/84786032/135657499-b92ad00a-3b73-41b1-9a31-e729b2ff28d9.png)
 13) Click Refresh after installation is loaded <br/>
 ![image](https://user-images.githubusercontent.com/84786032/135657579-79bc691e-85e6-4c0e-967a-67cffbf16918.png)
-14) Click Stop editing if present. 
+14) Click Stop editing if present. <br/> 
 ![image](https://user-images.githubusercontent.com/84786032/135658055-b99a2850-267a-4237-9f48-f3491c4a99aa.png)
-15) CONGRATULATIONS!!! ERA is now ready to go! It will appear similar to the screen-shots below. 
+15) CONGRATULATIONS!!! ERA is now ready to go! It will appear similar to the screen-shots below.  <br/>
 ![image](https://user-images.githubusercontent.com/84786032/156639997-5597e4a0-fcc9-4e3b-9e0a-f4e6b4f11573.png) <br />
 <br/> Administrators/Organizers view
 ![image](https://user-images.githubusercontent.com/84786032/156640035-cf5a5aa9-041b-443a-9685-0a191196e056.png)
