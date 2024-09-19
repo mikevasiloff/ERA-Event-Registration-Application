@@ -9,10 +9,12 @@ export interface IEventItem extends Types.SP.ListItemOData {
     EndDate: string;
     EventStatus: { results: string };
     IsCancelled: boolean;
+    RegistrationClosed: boolean;
     Location: string;
-    OpenSpots: string;
-    Capacity: string;
+    OpenSpots: number;
+    Capacity: number;
     CreatedBy: string;
+    Modified: string;
     Editor: { Id: number, Title: string };
     POC: {
         results: {
@@ -49,6 +51,8 @@ export interface IConfiguration {
     hideHeader?: boolean;
     hideImage?: boolean;
     membersGroupName?: string;
+    eventList?: string;
+    userRegistrationList?: string;
 }
 /**
  * Data Source
@@ -114,7 +118,7 @@ export class DataSource {
 
             // Load the data
             if (this._isAdmin) {
-                web.Lists(Strings.Lists.Events).Items().query({
+                web.Lists(DataSource.Configuration.eventList).Items().query({ //was String Events
                     Expand: ["Editor", "AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
                     GetAllItems: true,
                     OrderBy: ["StartDate asc"],
@@ -137,7 +141,7 @@ export class DataSource {
             }
             else {
                 let today = moment().toISOString();
-                web.Lists(Strings.Lists.Events).Items().query({
+                web.Lists(DataSource.Configuration.eventList).Items().query({ //was String Events
                     Expand: ["AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
                     Filter: `StartDate ge '${today}'`,
                     GetAllItems: true,
@@ -157,7 +161,7 @@ export class DataSource {
                 );
             }
             // Load the user permissions for the Events list
-            web.Lists(Strings.Lists.Events).getUserEffectivePermissions(this._userLoginName).execute(perm => {
+            web.Lists(DataSource.Configuration.eventList).getUserEffectivePermissions(this._userLoginName).execute(perm => { //was String Events
                 // Save the user permissions
                 this._eventRegPerms = perm.GetUserEffectivePermissions;
             }, () => {
@@ -274,6 +278,8 @@ export class DataSource {
 
                     // Set the configuration
                     this._cfg = cfg;
+                    if (this._cfg.eventList == null)
+                        this._cfg.eventList = Strings.Lists.Events;
 
                     // Resolve the request
                     resolve();

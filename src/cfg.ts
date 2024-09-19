@@ -1,6 +1,6 @@
 import { Helper, SPTypes } from "gd-sprest-bs";
 import Strings from "./strings";
-
+import { DataSource } from "./ds";
 /**
  * SharePoint Assets
  */
@@ -8,7 +8,7 @@ export const Configuration = Helper.SPConfig({
     ListCfg: [
         {
             ListInformation: {
-                Title: Strings.Lists.Events,
+                Title: Strings.Lists.Events, //DataSource.Configuration.eventList,
                 BaseTemplate: SPTypes.ListTemplateType.GenericList
             },
             CustomFields: [
@@ -96,6 +96,13 @@ export const Configuration = Helper.SPConfig({
                     title: "Is Cancelled?",
                     type: Helper.SPCfgFieldType.Boolean,
                     showInEditForm: false,
+                    showInNewForm: false,
+                },
+                {
+                    name: "RegistrationClosed",
+                    title: "Registration Closed",
+                    type: Helper.SPCfgFieldType.Boolean,
+                    showInEditForm: true,
                     showInNewForm: false,
                 }
             ],

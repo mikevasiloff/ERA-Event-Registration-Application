@@ -20,7 +20,7 @@ const Strings = {
     AppElementId: "event-registration",
     GlobalVariable: "EventRegistration",
     Lists: {
-        Events: "Events",
+        Events: "Events"
     },
     ProjectName: "Event Registration",
     ProjectDescription: "Allows users to sign up for events.",
@@ -28,6 +28,6 @@ const Strings = {
     SourceUrl: ContextInfo.webServerRelativeUrl + "/SiteAssets/Event-Registration/",
     SolutionUrl: ContextInfo.webServerRelativeUrl + "/sites/dev/SiteAssets/Event-Registration/index.html",
     background: "https://usaf.dps.mil/sites/AFGSC-HQ/hq/ds/dsk/josh/EventReg2/SiteAssets/era.png",
-    Version: "2.0",
+    Version: "2.0.3",
 };
 export default Strings;

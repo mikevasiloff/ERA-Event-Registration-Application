@@ -1,7 +1,8 @@
 import { ItemForm, LoadingDialog, Modal } from "dattatable";
-import { Components, Utility } from "gd-sprest-bs";
+import { Components, Utility, Web } from "gd-sprest-bs";
 import * as moment from "moment";
-import { IEventItem } from "./ds";
+import { DataSource, IEventItem } from "./ds";
+import Strings from "./strings";
 
 /**
  * 
@@ -347,5 +348,189 @@ export class EventForms {
 
         // Return the properties
         return props;
+    }
+
+    static openRegisterForm(eventItem:IEventItem, onComplete: () => void) {
+        // Set the modal header
+        Modal.setHeader("Required Information")
+
+        // Create the form
+        let form = Components.Form({
+        controls: [
+            {
+                name: "Rank",
+                label: "Rank",
+                required: true,
+                type: Components.FormControlTypes.TextField
+            },
+            {
+                // name: "User",
+                // label: "User",
+                // required: true,
+                // errorMessage: "A user is required.",
+                // type: Components.FormControlTypes.PeoplePicker,
+                // onValidate: (ctrl, result) => {
+                //     // Parse the current POCs
+                //     let users = eventItem.RegisteredUsersId ? eventItem.RegisteredUsersId.results : [];
+                //     for (let i = 0; i < users.length; i++) {
+                //     // See if the user is already registered
+                //     if (users[i] == result.value[0].Id) {
+                //         // User is already registered
+                //         result.isValid = false;
+                //         result.invalidMessage = "User is already registered.";
+                //     }
+                //     }
+
+                //     // Return the result
+                //     return result;
+                // }
+            },
+            {
+                name: "Directorate",
+                label: "Directorate",
+                type: Components.FormControlTypes.Dropdown,
+                // onControlRendering: function (props) {
+                //     // Set the dropdown items
+                //     props.items = [
+                //         { text: "" },
+                //         { text: "Item 1" },
+                //         { text: "Item 2" },
+                //         { text: "Item 3" },
+                //         { text: "Item 4" },
+                //         { text: "Item 5" }
+                //     ];
+                // }
+                items: [
+                    {
+                        text: "A1",
+                        value: "A1"
+                    },
+                    {
+                        text: "A2",
+                        value: "A2"
+                    }
+                ]
+            } as Components.IFormControlPropsDropdown,
+            {
+                name: "ArrivalDate",
+                label: "Date of Arrival",
+                required: true,
+                type: Components.FormControlTypes.DateTime,
+            } as Components.IFormControlPropsDateTime,
+            {
+                name: "DoDID",
+                label: "DoD ID Number",
+                required: true,
+                type: Components.FormControlTypes.TextField
+            },
+            {
+                name: "SIPREmail",
+                label: "SIPR email address",
+                required: true,
+                type: Components.FormControlTypes.TextField
+            },
+            {
+                name: "YellowBadge",
+                label: "Do you have a yellow badge?",
+                required: true,
+                type: Components.FormControlTypes.Dropdown,
+                items: [
+                    {
+                        text: "Yes",
+                        value: "Yes"
+                    },
+                    {
+                        text: "No",
+                        value: "No"
+                    },
+                    {
+                        text: "Unsure",
+                        value: "I don't know"
+                    }                    
+                ]
+            } as Components.IFormControlPropsDropdown,
+            {
+                name: "Attachment",
+                label: "Attachments",
+                type: Components.FormControlTypes.File,
+                required: false
+            }
+        ]   
+        });
+
+        // Set the modal body
+        Modal.setBody(form.el);
+
+        Modal.setScrollable(true);
+
+        // Set the modal footer
+        Modal.setFooter(Components.ButtonGroup({
+        buttons: [
+            {
+                text: "Finish",
+                type: Components.ButtonTypes.Primary,
+                onClick: () => {
+                    // Ensure the form is valid
+                    if (form.isValid()) {
+                        let formValues = form.getValues();
+
+                        // Attachment: "C:\\fakepath\\Template_Memo_AIRCOM.docx"
+                        // YellowBadge:
+                        //     text: "Unsure"
+                        //     value: "I don't know"
+
+                        // Close the modal
+                        Modal.hide();
+
+                        // // Show a loading dialog
+                        // LoadingDialog.setHeader("Registering User");
+                        // LoadingDialog.setBody("This dialog will close after the user is registered.");
+                        // LoadingDialog.show();
+
+                        // Update the item
+                        //formValues["SendEmail"]
+                        
+                        //Web().Lists(Strings.Lists.RegisteredStudents) . items? .query
+                        //SP.Data.ACC_x0020_Registered_x0020_StudentsListItem
+                        // var itemType = GetItemTypeForListName(listName);
+                        // function GetItemTypeForListName(name) {
+                        //     return "SP.Data." + name.charAt(0).toUpperCase() + name.split(" ").join("").slice(1) + "ListItem";
+                        // }
+
+                        //Do work
+                        // Web().Lists(Strings.Lists.RegisteredStudents).Items().add({
+                        //     //"__metadata": { "type": itemType },
+                        //     //"Title": newItemTitle
+                        //     "Rank": formValues["Rank"],
+                        //     "Directorate": formValues["Directorate"],
+                        //     "DoDID_x0020_Number": formValues["DoDID"],
+                        //     "Date_x0020_of_x0020_Arrival": formValues["ArrivalDate"],
+                        //     "SIPREmail": formValues["SIPREmail"],
+                        //     "Do_x0020_you_x0020_have_x0020_a_": formValues["YellowBadge"]
+                        // }).execute(value => {
+                        //     onComplete();
+                        // },
+                        // // Error
+                        // (error) => { 
+                        //     //Couldn't add for some reason
+                        //     //status: 404
+                        //     //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
+                        //     if (console) console.log(error);
+                        // });
+                    }
+                }
+            },
+            {
+                text: "Cancel",
+                type: Components.ButtonTypes.Secondary,
+                onClick: () => {
+                    Modal.hide();
+                }
+            }
+        ]
+        }).el);
+
+        // Display the modal
+        Modal.show();
     }
 }
