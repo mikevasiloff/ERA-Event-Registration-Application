@@ -27,6 +27,105 @@ export class Registration {
         this.render();
     }
 
+    static findUserRegistrationAndDelete = (eventItem:IEventItem, userId:number) => {
+        if (DataSource.Configuration.userRegistrationList)
+            Web().Lists(DataSource.Configuration.userRegistrationList).Items().query({
+                //Expand: ["Editor", "AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
+                //GetAllItems: true,
+                //OrderBy: ["StartDate asc"],
+                //Top: 5000,
+                // Select: [
+                //     "*", "POC/Id", "POC/Title", "POC/EMail",
+                //     "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
+                //     "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
+                //     "Editor/Id", "Editor/Title",
+                // ]
+                Filter: DataSource.Configuration.userRegistrationEventField + "Id eq " + eventItem.Id.toString() + " and PersonId eq " + userId,
+            }).execute(items => {
+                    const item = items.results && items.results[0];
+                    if (item) {
+                        Web().Lists(DataSource.Configuration.userRegistrationList).Items().getById(item.Id).delete()
+                        .execute(value => {
+                            //Nothing needed
+                        },
+                        // Error
+                        (error) => { 
+                            //Couldn't add for some reason
+                            //status: 404
+                            //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
+                            if (console) console.log(error);
+                        });
+                    }
+                },
+                // Error
+                () => { }
+            );
+    }
+
+    static setUserFromWaitlistToRegistered = (eventItem:IEventItem, userId:number) => {
+        if (DataSource.Configuration.userRegistrationList)
+            Web().Lists(DataSource.Configuration.userRegistrationList).Items().query({
+                //Expand: ["Editor", "AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
+                //GetAllItems: true,
+                //OrderBy: ["StartDate asc"],
+                //Top: 5000,
+                // Select: [
+                //     "*", "POC/Id", "POC/Title", "POC/EMail",
+                //     "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
+                //     "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
+                //     "Editor/Id", "Editor/Title",
+                // ]
+                Filter: DataSource.Configuration.userRegistrationEventField + "Id eq " + eventItem.Id.toString() + " and PersonId eq " + userId,
+            }).execute(items => {
+                    const item = items.results && items.results[0];
+                    if (item) {
+                        Web().Lists(DataSource.Configuration.userRegistrationList).Items().getById(item.Id).update({
+                            "Status": "Registered"
+                        })
+                        .execute(value => {
+                            //Nothing needed
+                        },
+                        // Error
+                        (error) => { 
+                            //Couldn't add for some reason
+                            //status: 404
+                            //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
+                            if (console) console.log(error);
+                        });
+                    }
+                    else //Couldn't find user record, so add one
+                        Registration.addUserRegistration(eventItem, userId, "Registered");
+                },
+                // Error
+                () => { }
+            );
+    }
+
+    static addUserRegistration = (eventItem:IEventItem, userId:number, status:string) => {
+        if (DataSource.Configuration.userRegistrationList) {
+            let addConfig = {
+                //"__metadata": { "type": itemType },
+                "Title": eventItem.Title,
+                "PersonId": userId,
+                "Status": status
+            };
+            addConfig[DataSource.Configuration.userRegistrationEventField + "Id"] = eventItem.Id;
+            addConfig["EventType"] = DataSource.Configuration.userRegistrationEventType;
+            //Send it
+            Web().Lists(DataSource.Configuration.userRegistrationList).Items().add(addConfig).execute(value => {
+                //Nothing
+                console.log(value);
+            },
+            // Error
+            (error) => { 
+                //Couldn't add for some reason
+                //status: 404
+                //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
+                if (console) console.log(error);
+            });
+        }
+    }
+
     // Gets the user email
     static getUserEmail(userId: number): PromiseLike<string> {
         // Return a promise
@@ -207,98 +306,6 @@ export class Registration {
                     }
                 );
                 
-                const findUserRegistrationAndDelete = () => {
-                    Web().Lists(DataSource.Configuration.userRegistrationList).Items().query({
-                        //Expand: ["Editor", "AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
-                        //GetAllItems: true,
-                        //OrderBy: ["StartDate asc"],
-                        //Top: 5000,
-                        // Select: [
-                        //     "*", "POC/Id", "POC/Title", "POC/EMail",
-                        //     "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
-                        //     "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
-                        //     "Editor/Id", "Editor/Title",
-                        // ]
-                        Filter: "ClassId eq " + this._item.Id.toString() + " and PersonId eq " + ContextInfo.userId,
-                    }).execute(items => {
-                            const item = items.results && items.results[0];
-                            if (item) {
-                                Web().Lists(DataSource.Configuration.userRegistrationList).Items().getById(item.Id).delete()
-                                .execute(value => {
-                                    //Nothing needed
-                                },
-                                // Error
-                                (error) => { 
-                                    //Couldn't add for some reason
-                                    //status: 404
-                                    //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
-                                    if (console) console.log(error);
-                                });
-                            }
-                        },
-                        // Error
-                        () => { }
-                    );
-                }
-
-                const setUserFromWaitlistToRegistered = (userId:Number) => {
-                    Web().Lists(DataSource.Configuration.userRegistrationList).Items().query({
-                        //Expand: ["Editor", "AttachmentFiles", "POC", "RegisteredUsers", "WaitListedUsers"],
-                        //GetAllItems: true,
-                        //OrderBy: ["StartDate asc"],
-                        //Top: 5000,
-                        // Select: [
-                        //     "*", "POC/Id", "POC/Title", "POC/EMail",
-                        //     "RegisteredUsers/Id", "RegisteredUsers/Title", "RegisteredUsers/EMail",
-                        //     "WaitListedUsers/Id", "WaitListedUsers/Title", "WaitListedUsers/EMail",
-                        //     "Editor/Id", "Editor/Title",
-                        // ]
-                        Filter: "ClassId eq " + this._item.Id.toString() + " and PersonId eq " + userId,
-                    }).execute(items => {
-                            const item = items.results && items.results[0];
-                            if (item) {
-                                Web().Lists(DataSource.Configuration.userRegistrationList).Items().getById(item.Id).update({
-                                    "Status": "Registered"
-                                })
-                                .execute(value => {
-                                    //Nothing needed
-                                },
-                                // Error
-                                (error) => { 
-                                    //Couldn't add for some reason
-                                    //status: 404
-                                    //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
-                                    if (console) console.log(error);
-                                });
-                            }
-                            else //Couldn't find user record, so add one
-                                addUserRegistration("Registered", userId);
-                        },
-                        // Error
-                        () => { }
-                    );
-                }
-
-                const addUserRegistration = (status:string, userId?:Number) => {
-                    Web().Lists(DataSource.Configuration.userRegistrationList).Items().add({
-                        //"__metadata": { "type": itemType },
-                        "Title": this._item.Title,
-                        "ClassId": this._item.Id,
-                        "PersonId": userId || ContextInfo.userId,
-                        "Status": status
-                    }).execute(value => {
-                        //Nothing
-                        console.log(value);
-                    },
-                    // Error
-                    (error) => { 
-                        //Couldn't add for some reason
-                        //status: 404
-                        //response: "{\"error\":{\"code\":\"-1, System.ArgumentException\",\"message\":{\"lang\":\"en-US\",\"value\":\"List 'ACC Registered Students' does not exist at site with URL 'https://usaf.dps.mil/sites/ua-cs/csdt/Allshouse'.\"}}}"
-                        if (console) console.log(error);
-                    });
-                }
-
                 const updateItem = () => {
                     let waitListedUserIds = this._item.WaitListedUsersId ? this._item.WaitListedUsersId.results : [];
                     let registeredUserIds = this._item.RegisteredUsersId ? this._item.RegisteredUsersId.results : [];
@@ -322,8 +329,7 @@ export class Registration {
                             WaitListedUsersId: { results: waitListedUserIds },
                         };
 
-                        if (DataSource.Configuration.userRegistrationList)
-                            findUserRegistrationAndDelete();
+                        Registration.findUserRegistrationAndDelete(this._item, userID);
                     }
                     // Else, see if the event is full and the user is not registered
                     else if (eventFull && !isRegistered) {
@@ -335,8 +341,7 @@ export class Registration {
                             WaitListedUsersId: { results: waitListedUserIds },
                         };
 
-                        if (DataSource.Configuration.userRegistrationList)
-                            addUserRegistration("Waitlist");
+                        Registration.addUserRegistration(this._item, ContextInfo.userId, "Waitlist");
                     }
                     // Else, see if the user is already registered
                     else if (isRegistered) {
@@ -347,6 +352,7 @@ export class Registration {
 
                         // Remove the user
                         registeredUserIds.splice(userIdx, 1);
+                        Registration.findUserRegistrationAndDelete(this._item, ContextInfo.userId);
 
                         //if the event was full, add the next waitlist user
                         if (eventFull && waitListedUserIds.length > 0) {
@@ -360,6 +366,8 @@ export class Registration {
                             // Add to registered users
                             registeredUserIds.push(userFromWaitlist);
                             //registerUserFromWaitlist = userFromWaitlist; ?????
+
+                            Registration.setUserFromWaitlistToRegistered(this._item, userFromWaitlist);
                         }
 
                         // Set the metadata
@@ -368,14 +376,6 @@ export class Registration {
                             RegisteredUsersId: { results: registeredUserIds },
                             WaitListedUsersId: { results: waitListedUserIds },
                         };
-
-                        if (DataSource.Configuration.userRegistrationList) {
-                            findUserRegistrationAndDelete();
-                            
-                            //Update other user from waitlist
-                            if (userFromWaitlist > 0)
-                                setUserFromWaitlistToRegistered(userFromWaitlist);
-                        }
                     }
                     // Else, the event is open
                     else {
@@ -388,8 +388,7 @@ export class Registration {
                             RegisteredUsersId: { results: registeredUserIds },
                         };
 
-                        if (DataSource.Configuration.userRegistrationList)
-                            addUserRegistration("Registered");
+                        Registration.addUserRegistration(this._item, ContextInfo.userId, "Registered");
                     }
 
                     // Update the item

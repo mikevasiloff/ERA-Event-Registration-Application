@@ -53,6 +53,8 @@ export interface IConfiguration {
     membersGroupName?: string;
     eventList?: string;
     userRegistrationList?: string;
+    userRegistrationEventField?: string;
+    userRegistrationEventType?: string;
 }
 /**
  * Data Source
@@ -302,7 +304,7 @@ export class DataSource {
     static get ManagersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._managerId; };
     private static _memberId: number = null;
     static get MembersUrl(): string { return ContextInfo.webServerRelativeUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + this._memberId; };
-    static get ListUrl(): string { return ContextInfo.webServerRelativeUrl + "/Lists/Events/AllItems.aspx" };
+    static get ListUrl(): string { return ContextInfo.webServerRelativeUrl + "/Lists/" + this.Configuration.eventList.replace(/ /g, '') };
     static loadSecurityGroupUrls(): PromiseLike<void> {
         return new Promise((resolve) => {
             let web = Web();
